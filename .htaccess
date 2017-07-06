@@ -1,0 +1,23 @@
+# настройки
+php_flag display_errors on
+Options All -Indexes
+AddDefaultCharset utf-8
+AddCharset utf-8 *
+<IfModule mod_charset.c>
+    CharsetSourceEnc utf-8
+    CharsetDefault utf-8
+</IfModule>
+RewriteEngine on
+RewriteBase /
+
+# скрытие настроек
+RewriteRule ^.htaccess$ - [F]
+
+# удаление последнего хеша
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)/$  /$1 [R=301,L]
+
+# роутинг
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [L,QSA]

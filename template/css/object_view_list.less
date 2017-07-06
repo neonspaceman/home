@@ -1,0 +1,185 @@
+@import "elements";
+
+.filter {
+  .filter_item {
+    margin-bottom: 15px;
+    .filter_title {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #000;
+      text-decoration: none;
+    }
+    .filter_content {
+      .range {
+        margin-bottom: 0;
+      }
+      .checkbox_group {
+        max-height: 222px;
+        overflow-y: auto;
+        margin-bottom: 0;
+        padding: 5px 7px;
+        .rounded(2px);
+        border: 1px solid #eaeded;
+      }
+    }
+  }
+  .filter_button {
+    .button {
+      width: 100%;
+    }
+    .filter_clear {
+      margin-top: 10px;
+    }
+  }
+}
+
+.objects {
+  .object_item {
+    position: relative;
+    margin-top: 20px;
+    overflow: hidden;
+    &:hover {
+      background: #fbf6d9;
+    }
+    &:first-child {
+      margin-top: 0;
+    }
+    .cover {
+      width: 100px;
+      height: 100px;
+      position: relative;
+      float: left;
+      margin-right: 10px;
+      background: center no-repeat;
+      background-size: cover;
+      .count {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        color: #fff;
+        text-shadow: 0 0 10px rgba(0,0,0,1);
+        i {
+          margin-right: 5px;
+        }
+      }
+    }
+    .general {
+      width: 200px;
+      float: left;
+      margin-top: 5px;
+      .address {
+        font-size: 18px;
+        color: #000;
+      }
+      .view_on_map {
+        display: block;
+        margin-top: 10px;
+      }
+      .short {
+        margin-top: 10px;
+        span {
+          margin-right: 10px;
+        }
+      }
+      .price {
+        margin-top: 10px;
+        font-size: 18px;
+        i {
+          font-size: 16px;
+        }
+      }
+    }
+    .info {
+      float: left;
+      margin-top: 5px;
+      .title {
+        font-weight: bold;
+      }
+      .icons {
+        overflow: hidden;
+        margin: 5px 0;
+        li {
+          display: block;
+          width: 24px;
+          height: 24px;
+          float: left;
+          margin-right: 10px;
+          background: no-repeat center;
+          &.cabinet {
+            background-image: url(/template/images/icons/cabinet.png);
+          }
+          &.table {
+            background-image: url(/template/images/icons/table.png);
+          }
+          &.kitchen {
+            background-image: url(/template/images/icons/kitchen.png);
+          }
+          &.bed {
+            background-image: url(/template/images/icons/bed.png);
+          }
+          &.tv {
+            background-image: url(/template/images/icons/tv.png);
+          }
+          &.cable {
+            background-image: url(/template/images/icons/cable.png);
+          }
+          &.internet {
+            background-image: url(/template/images/icons/internet.png);
+          }
+          &.wifi {
+            background-image: url(/template/images/icons/wifi.png);
+          }
+          &.fridge {
+            background-image: url(/template/images/icons/fridge.png);
+          }
+          &.cooker {
+            background-image: url(/template/images/icons/cooker.png);
+          }
+          &.washer {
+            background-image: url(/template/images/icons/washer.png);
+          }
+          &.microwave {
+            background-image: url(/template/images/icons/microwave.png);
+          }
+          &.vacuum_cleaner {
+            background-image: url(/template/images/icons/vacuum_cleaner.png);
+          }
+          &.hair_dryer {
+            background-image: url(/template/images/icons/hair_dryer.png);
+          }
+          &.iron {
+            background-image: url(/template/images/icons/iron.png);
+          }
+          &.air_con {
+            background-image: url(/template/images/icons/air_con.png);
+          }
+        }
+      }
+    }
+    .action {
+      float: right;
+      margin-top: 5px;
+      margin-right: 5px;
+      text-align: right;
+      .landlord {
+        .name {
+          font-weight: bold;
+        }
+        .phone {
+          margin-top: 8px;
+        }
+        .more {
+          display: block;
+          margin-top: 6px;
+        }
+      }
+    }
+  }
+  .time {
+    position: absolute;
+    bottom: 7px;
+    right: 5px;
+    color: rgba(0,0,0,0.3);
+  }
+}
