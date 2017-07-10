@@ -5,7 +5,6 @@ const FLAT_ORDERS = array(
   array("price", "по цене")
 );
 const FLAT_SOURCE = array(
-  array("id" => 0, "caption" => "Не выбрано"),
   array("id" => 1, "caption" => "find-home.ru"),
   array("id" => 2, "caption" => "Авито"),
   array("id" => 3, "caption" => "БарахлаНет (barahla.net)"),
@@ -31,7 +30,6 @@ const FLAT_SOURCE = array(
 const FLAT_EXCLUSIVE = array("id" => 1, "caption" => "Эксклюзив");
 const FLAT_QUICKLY = array("id" => 1, "caption" => "Срочно");
 const FLAT_COUNT_ROOMS = array(
-  array("id" => 0, "caption" => "Не выбрано"),
   array("id" => -1, "caption" => "Студия"),
   array("id" => 1, "caption" => "1 комната"),
   array("id" => 2, "caption" => "2 комнаты"),
@@ -40,37 +38,31 @@ const FLAT_COUNT_ROOMS = array(
 );
 const FLAT_RELATIVE_ROOMS = array("id" => 1, "caption" => "Смежные команты");
 const FLAT_STATE = array(
-  array("id" => 0, "caption" => "Не выбрано"),
   array("id" => 1, "caption" => "Отличное"),
   array("id" => 2, "caption" => "Хорошое"),
   array("id" => 3, "caption" => "Жилое"),
   array("id" => 4, "caption" => "Требует ремонта")
 );
 const FLAT_HEATING = array(
-  array("id" => 0, "caption" => "Не выбрано"),
   array("id" => 1, "caption" => "Нет"),
   array("id" => 2, "caption" => "Местная котельная / ТЭЦ"),
   array("id" => 3, "caption" => "Электро"),
   array("id" => 4, "caption" => "Печное")
 );
 const FLAT_HOT_WATER = array(
-  array("id" => 0, "caption" => "Не выбрано"),
   array("id" => 1, "caption" => "Нет"),
   array("id" => 2, "caption" => "Местная котельная / ТЭЦ"),
   array("id" => 3, "caption" => "Бойлер")
 );
 const FLAT_WC = array(
-  array("id" => 0, "caption" => "Не выбрано"),
   array("id" => 1, "caption" => "Раздельный"),
   array("id" => 2, "caption" => "Совмещённый")
 );
 const FLAT_WINDOW = array(
-  array("id" => 0, "caption" => "Не выбрано"),
   array("id" => 1, "caption" => "Пластик"),
   array("id" => 2, "caption" => "Дерево")
 );
 const FLAT_TYPE_BALCONY = array(
-  array("id" => 0, "caption" => "Не выбрано"),
   array("id" => 1, "caption" => "Пластик"),
   array("id" => 2, "caption" => "Дерево"),
   array("id" => 3, "caption" => "Аллюминий"),

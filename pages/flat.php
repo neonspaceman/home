@@ -16,7 +16,7 @@ class flat extends __page
   {
     $this->set_title("Добавление квартиры на аренду");
     $this->insert_script("//api-maps.yandex.ru/2.1/?lang=ru_RU");
-    $this->insert_style("/template/css/object_add.css", time());
+    $this->insert_style("/template/css/object_manager.css", time());
     $this->insert_script("/template/js/object_manager.js", time());
     $this->insert_script("/template/js/object_add.js", time());
     $this->set_template("flat_add");
@@ -68,7 +68,7 @@ class flat extends __page
     if ($object_exists)
     {
       $this->insert_script("//api-maps.yandex.ru/2.1/?lang=ru_RU");
-      $this->insert_style("/template/css/object_add.css", time());
+      $this->insert_style("/template/css/object_manager.css", time());
       $this->insert_script("/template/js/object_manager.js", time());
       $this->insert_script("/template/js/object_edit.js", time());
       $this->set_template("flat_edit");

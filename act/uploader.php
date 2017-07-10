@@ -76,29 +76,58 @@ function image_upload($method)
 /**
  * Удаление изображения из базы
  */
-function remove_image()
+// function remove_image()
+// {
+//   $db = __database::get_instance();
+//
+//   $object_id = __data::post("object", "u");
+//   $object_hash = __data::post("hash", "s");
+//   $photo_id = __data::post("photo", "u");
+//
+//   $q = "select `fullsize`, `thumb` from `images` where `id` = ? and (`id_object` = ? or `hash` = ?) limit 1";
+//   $stmt = $db->prepare($q) or die($db->error);
+//   $stmt->bind_param("iis", $photo_id, $object_id, $object_hash);
+//   $stmt->execute() or die($db->error);
+//   $res = $stmt->get_result();
+//   if ($row = $res->fetch_assoc())
+//   {
+//     unlink(ROOT . $row["fullsize"]);
+//     unlink(ROOT . $row["thumb"]);
+//   }
+//   $res->close();
+//   $stmt->close();
+//
+//   $q = "delete from `images` where `id` = ? and (`id_object` = ? or `hash` = ?) limit 1";
+//   $stmt = $db->prepare($q) or die($db->error);
+//   $stmt->bind_param("iis", $photo_id, $object_id, $object_hash);
+//   $stmt->execute() or die($db->error);
+//   $stmt->close();
+// }
+
+function load_images_by_id()
 {
   $db = __database::get_instance();
-  $id = __data::post("id", "u");
+  $response = __response::get_instance();
 
-  $q = "select `fullsize`, `thumb` from `images` where `id` = ? limit 1";
+  $id_object = __data::post("id", "u");
+  $images = array();
+
+  $q = "select `id`, `thumb` from `images` where `id_object` = ?";
   $stmt = $db->prepare($q) or die($db->error);
-  $stmt->bind_param("i", $id);
+  $stmt->bind_param("i", $id_object);
   $stmt->execute() or die($db->error);
   $res = $stmt->get_result();
-  if ($row = $res->fetch_assoc())
+  while($row = $res->fetch_assoc())
   {
-    unlink(ROOT . $row["fullsize"]);
-    unlink(ROOT . $row["thumb"]);
+    $images[] = array(
+      "id" => $row["id"],
+      "thumb" => $row["thumb"]
+    );
   }
   $res->close();
   $stmt->close();
 
-  $q = "delete from `images` where `id` = ? limit 1";
-  $stmt = $db->prepare($q) or die($db->error);
-  $stmt->bind_param("i", $id);
-  $stmt->execute() or die($db->error);
-  $stmt->close();
+  $response->set_value("images", $images);
 }
 
 $core = __core::get_instance();
@@ -114,9 +143,12 @@ case "upload_image_file":
 case "upload_image_base64":
   image_upload('base64');
   break;
-case "remove_image":
-  remove_image();
+case "load_images_by_id":
+  load_images_by_id();
   break;
+// case "remove_image":
+//   remove_image();
+//   break;
 }
 
 $response->send();

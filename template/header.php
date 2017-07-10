@@ -8,7 +8,7 @@
       <li><a><i class="fa fa-question-circle-o" aria-hidden="true"></i>Вопросы и ответы</a></li>
       <li><a><i class="fa fa-lock" aria-hidden="true"></i>Получить доступ</a></li>
       <?php if ($user->get("logged")): ?>
-      <li><a id="user_action"><i class="fa fa-user" aria-hidden="true"></i><?php print_t($user->get("name")) ?><i class="fa fa-caret-down right" aria-hidden="true"></i></a></li>
+      <li><a id="user_action"><i class="fa fa-user" aria-hidden="true"></i><?= text($user->get("name")) ?><i class="fa fa-caret-down right" aria-hidden="true"></i></a></li>
       <?php else: ?>
       <li><a id="user_action"><i class="fa fa-user" aria-hidden="true"></i>Войти</a></li>
       <?php endif; ?>

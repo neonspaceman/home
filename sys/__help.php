@@ -48,7 +48,7 @@ function get_regions()
     }
     $res->close();
 
-    $ret = array(array("id" => 0, "caption" => "Не выбрано", "sub" => array()));
+    $ret = array();
     foreach($regions as $key_region => $region)
     {
       $arr = array("id" => $key_region, "caption" => $region[0], "sub" => []);
@@ -95,8 +95,24 @@ function get_offset($records_on_page, $count)
 /**
  * Вывод текста
  * @param $string
+ * @return string
  */
-function print_t($string)
+function text($string)
 {
-  echo htmlspecialchars($string);
+  return htmlspecialchars($string);
+}
+
+/**
+ * Возвращает массив с данными съедобный для элемента <select>
+ * @param array $data
+ * @param bool $extension
+ * @return array
+ */
+function to_select($data, $extension = false)
+{
+  $first_item = array("id" => 0, "caption" => "Не выбрано");
+  if ($extension)
+    $first_item["sub"] = array();
+  array_unshift($data, $first_item);
+  return $data;
 }

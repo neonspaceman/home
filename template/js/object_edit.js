@@ -12,68 +12,74 @@ var Form = {
  * Инициализация
  */
 Form.init = function(){
-  new Select($("input[name='source']"), params.source[0], { selected: params.source[1] });
+  this.street = params.streetName;
+  this.house = params.house;
+  (new Select($("input[name='source']"), params.source[0])).selectById(params.source[1]);
   new Checkbox($("input[name='exclusive']"), params.exclusive[0], { checked: params.exclusive[1] });
   new Checkbox($("input[name='quickly']"), params.quickly[0], { checked: params.quickly[1] });
   this.landlord = new Landlord($("#landlord"));
+  this.landlord.load(params.id);
   $("input[name='city']").on("change", function(){ Form.setCity($.trim($(this).val())); });
-  new Select($("input[name='region']"), params.region, { extension: true });
-  new Autocomplete($("input[name='street']"), {
+  (new Select($("input[name='region']"), params.region[0], { extension: true })).selectById(params.region[1]);
+  (new Autocomplete($("input[name='street']"), {
     url: "/act/geo.php?act=street_find",
     onChoose: function(selected){ Form.setStreet(selected[1]); }
-  });
-  $("input[name='house']").on("change", function(){
+  })).selectById("/act/geo.php?act=street_find_by_id", params.streetId);
+  $("input[name='house']").val(params.house).on("change", function(){
     Form.setHouse($.trim($(this).val()));
   });
-  new Select($("input[name='count_rooms']"), params.countRooms[0], {
-    selected: params.countRooms[1],
-    onChoose: function(index) {
-      relatedRooms.setDisabled(index > 2);
-    }
-  });
+  $("input[name='flat']").val(params.flat);
+  $("textarea[name='guide']").val(params.guide);
+  (new Select($("input[name='count_rooms']"), params.countRooms[0], {
+    onChoose: function(index) { relatedRooms.setDisabled(index < 3); }
+  })).selectById(params.countRooms[1]);
   var relatedRooms = new Checkbox($("input[name='related_rooms']"), params.relatedRooms[0], {
     checked: params.relatedRooms[1],
-    disabled: params.countRooms[1]["id"] > 1
+    disabled: params.countRooms[1] <= 1
   });
-  new Counter($("input[name='square_general']"), { minValue: 0, isFloat: true });
-  new Counter($("input[name='square_living']"), { minValue: 0, isFloat: true });
-  new Counter($("input[name='square_kitchen']"), { minValue: 0, isFloat: true });
-  new CheckboxGroup($("input[name='furniture']"), params.furniture[0], {
-    selectedMask: params.furniture[1]
-  });
-  new Counter($("input[name='floor']"), { minValue: 0 });
-  new Counter($("input[name='floors']"), { minValue: 0 });
-  new Counter($("input[name='count_sleeps']"), { minValue: 0 });
-  new CheckboxGroup($("input[name='multimedia']"), params.multimedia);
-  new CheckboxGroup($("input[name='comfort']"), params.comfort);
-  new CheckboxGroup($("input[name='additionally']"), params.additionally);
-  new Select($("input[name='wc']"), params.wc);
-  new Select($("input[name='heating']"), params.heating);
-  new Select($("input[name='hot_water']"), params.hotWater);
-  new Select($("input[name='window']"), params.window);
-  new Select($("input[name='state']"), params.state);
+  new Counter($("input[name='square_general']"), { value: params.squareGeneral, minValue: 0, isFloat: true });
+  new Counter($("input[name='square_living']"), { value: params.squareLiving, minValue: 0, isFloat: true });
+  new Counter($("input[name='square_kitchen']"), { value: params.squareKitchen, minValue: 0, isFloat: true });
+  (new CheckboxGroup($("input[name='furniture']"), params.furniture[0])).setCheckedByMask(params.furniture[1]);
+  new Counter($("input[name='floor']"), { value: params.floor, minValue: 0 });
+  new Counter($("input[name='floors']"), { value: params.floors, minValue: 0 });
+  new Counter($("input[name='count_sleeps']"), { value: params.countSleeps, minValue: 0 });
+  (new CheckboxGroup($("input[name='multimedia']"), params.multimedia[0])).setCheckedByMask(params.multimedia[1]);
+  (new CheckboxGroup($("input[name='comfort']"), params.comfort[0])).setCheckedByMask(params.comfort[1]);
+  (new CheckboxGroup($("input[name='additionally']"), params.additionally[0])).setCheckedByMask(params.additionally[1]);
+  (new Select($("input[name='wc']"), params.wc[0])).selectById(params.wc[1]);
+  (new Select($("input[name='heating']"), params.heating[0])).selectById(params.heating[1]);
+  (new Select($("input[name='hot_water']"), params.hotWater[0])).selectById(params.hotWater[1]);
+  (new Select($("input[name='window']"), params.window[0])).selectById(params.window[1]);
+  (new Select($("input[name='state']"), params.state[0])).selectById(params.state[1]);
   new Counter($("input[name='count_balcony']"), {
+    value: params.countBalcony,
     minValue: 0,
     onChange: function(value){ typeBalcony.setDisabled(value < 1); }
   });
-  var typeBalcony = new Select($("input[name='type_balcony']"), params.typeBalcony, { disabled: true });
-  new Datepicker($("input[name='date_price']"));
-  new Datepicker($("input[name='date_rent']"));
-  new Counter($("input[name='price']"), { minValue: 0 });
-  new Counter($("input[name='guaranty']"), { minValue: 0 });
+  var typeBalcony = new Select($("input[name='type_balcony']"), params.typeBalcony[0], { disabled: params.countBalcony < 1 });
+  typeBalcony.selectById(params.typeBalcony[1]);
+  $("textarea[name='description']").val(params.description);
+  $("textarea[name='service_mark']").val(params.serviceMark);
+  (new Datepicker($("input[name='date_price']"))).selectByDate(params.datePrice);
+  (new Datepicker($("input[name='date_rent']"))).selectByDate(params.dateRent);
+  new Counter($("input[name='price']"), { value: params.price, minValue: 0 });
+  new Counter($("input[name='guaranty']"), { value: params.guaranty, minValue: 0 });
   new Counter($("input[name='prepayment']"), {
+    value: params.prepayment,
     minValue: 0,
     onChange: function(value){
       value = parseInt(value);
       $("#name_month").text(Common.getNumEnding(value, ["месяц", "месяца", "месяцев"]));
     }
   });
-  new CheckboxGroup($("input[name='price_additionally']"), params.priceAdditionally);
-  new CheckboxGroup($("input[name='for_whom']"), params.forWhom);
-  this.map = new Map($("#flat_map"));
+  (new CheckboxGroup($("input[name='price_additionally']"), params.priceAdditionally[0])).setCheckedByMask(params.priceAdditionally[1]);
+  (new CheckboxGroup($("input[name='for_whom']"), params.forWhom[0])).setCheckedByMask(params.forWhom[1]);
+  this.map = new Map($("#flat_map"), { coords: params.coords, zoom: params.zoom });
   this.uploader = new Uploader($("#uploader"));
+  this.uploader.load(params.id);
   this.findPhotos = new FindPhotos(this.uploader);
-  $("#form_flat_add").ajaxForm({
+  $("#form_flat_edit").ajaxForm({
     dataType: "json",
     beforeSubmit: function(arr, $form, options){
       var error = "";
@@ -94,7 +100,7 @@ Form.init = function(){
     }.bind(this),
     success: function(data, status, xhr, $form){
       if (data.status === "success") {
-        location.href = "/flat/view?id=" + data.id;
+        new MessageBox({ message: "Объект сохранён." });
       } else {
         var wrap_message = "";
         data.message.every(function(message){
@@ -119,7 +125,7 @@ Form.init = function(){
               break;
             default:
               wrap_message = "";
-              new MessageBox({ message: "При добавлении объекта произошла ошибка, обновите страницу и повторите попытку." });
+              new MessageBox({ message: "При сохранении объекта произошла ошибка, обновите страницу и повторите попытку." });
               return false;
           }
           return true;
@@ -131,7 +137,7 @@ Form.init = function(){
       }
     },
     error: function(){
-      new MessageBox({ message: "При добавлении объекта произошла ошибка, обновите страницу и повторите попытку." });
+      new MessageBox({ message: "При сохранении объекта произошла ошибка, обновите страницу и повторите попытку." });
     }
   });
 };

@@ -15,7 +15,7 @@ $stmt->close();
 <div class="popup_html">
   <div class="popup_body">
     <div class="popup_header">
-      <div class="popup_header_inner">Редактирование <?php print_t($name) ?></div>
+      <div class="popup_header_inner">Редактирование <?php text($name) ?></div>
       <a class="popup_close">закрыть</a>
     </div>
     <div class="popup_content">

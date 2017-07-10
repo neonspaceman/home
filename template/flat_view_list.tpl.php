@@ -38,7 +38,7 @@ $offset = get_offset(RECORDS_ON_PAGE, $count_flats);
       recordsOnPage: <?= json_encode(RECORDS_ON_PAGE) ?>,
       countRecords: <?= json_encode($count_flats) ?>,
       region: {
-        data: <?= json_encode(__ui::get_checkbox_data(get_regions())) ?>,
+        data: <?= json_encode(get_regions()) ?>,
         select: <?= json_encode(__filter::get_value_by_name("id_region")) ?>
       },
       floor: {
@@ -46,7 +46,7 @@ $offset = get_offset(RECORDS_ON_PAGE, $count_flats);
         select: <?= json_encode(__filter::get_value_by_name("floor")) ?>
       },
       countRooms: {
-        data: <?= json_encode(__ui::get_checkbox_data(FLAT_COUNT_ROOMS)) ?>,
+        data: <?= json_encode(FLAT_COUNT_ROOMS) ?>,
         select: <?= json_encode(__filter::get_value_by_name("count_rooms")) ?>
       },
       squareGeneral: {
@@ -148,7 +148,7 @@ $offset = get_offset(RECORDS_ON_PAGE, $count_flats);
           <div class="count"><i class="fa fa-camera" aria-hidden="true"></i><?= $count_images ?></div>
         </a>
         <div class="general">
-          <a href="/flat/view?id=<?= $object["id"] ?>" class="address">ул. <?php print_t($object["street_name"]) ?>, <?php print_t($object["house"]) ?></a>
+          <a href="/flat/view?id=<?= $object["id"] ?>" class="address">ул. <?= text($object["street_name"]) ?>, <?= text($object["house"]) ?></a>
           <a href="/flat/view?id=<?= $object["id"] ?>" class="view_on_map"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;Посмотреть на карте</a>
           <div class="short">
             <?php if ($object["count_rooms"]): ?><span><?= $object["count_rooms"] ?></span><?php endif; ?>
@@ -207,7 +207,7 @@ $offset = get_offset(RECORDS_ON_PAGE, $count_flats);
         </table>
         <div class="action">
           <div class="landlord">
-            <div class="name"><?php print_t($landlord["name"]) ?></div>
+            <div class="name"><?= text($landlord["name"]) ?></div>
             <?php if ($user->get("logged")): ?>
             <div class="phone"><?= $landlord["phone"] ?></div>
               <?php if ($count_phones > 1): ?>

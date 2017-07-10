@@ -409,6 +409,31 @@ Select.prototype.choose = function (index, subIndex){
   this.$wrap.find("input[type='hidden']").eq(0).val(id);
 };
 /**
+ * Выбрать по id
+ */
+Select.prototype.selectById = function(id){
+  this.opts.selected = 0;
+  this.opts.subSelected = -1;
+  this.data.every(function(item, i){
+    if (item.id === id){
+      this.opts.selected = i;
+      return false;
+    }
+    if (this.opts.extension) {
+      return item.sub.every(function(subItem, subI){
+        if (subItem.id === id){
+          this.opts.selected = i;
+          this.opts.subSelected = subI;
+          return false;
+        }
+        return true;
+      }.bind(this));
+    }
+    return true;
+  }.bind(this));
+  this.choose(this.opts.selected, this.opts.subSelected);
+};
+/**
  * Установка активности элемента
  * @param value
  */
@@ -519,7 +544,7 @@ Autocomplete.prototype.close = function (){
   }
   this.$wrap.removeClass("open_top open_bottom");
   this.$values.empty().removeClass("open_top open_bottom");
-  if (this.opts.onChoose)
+  if (this.opts.onChoose) // чтобы обрабатывать пустую строку
     this.opts.onChoose(this.selected);
 };
 /**
@@ -572,6 +597,33 @@ Autocomplete.prototype.choose = function (index){
   this.selected = this.data[index];
   this.$wrap.find("input[type='hidden']").val(this.selected["id"]);
   this.$input.val(this.selected["caption"]).blur();
+};
+/**
+ * Загрузка
+ * @param url
+ * @param id
+ */
+Autocomplete.prototype.selectById = function(url, id){
+  this.$loading.show();
+  this.xhr = $.ajax({
+    url: url,
+    method: "post",
+    data: { id: id },
+    dataType: "json",
+    success: function (data){
+      if (data.status === "success") {
+        this.selected = data.matches;
+        this.$wrap.find("input[type='hidden']").val(this.selected["id"]);
+        this.$input.val(this.selected["caption"]);
+        this.$loading.hide();
+      } else {
+        new MessageBox({ message: "При загрузке улицы произошла ошибка, обновите страницу и повторите попытку." });
+      }
+    }.bind(this),
+    error: function(){
+      new MessageBox({ message: "При загрузке улицы произошла ошибка, обновите страницу и повторите попытку." });
+    }
+  });
 };
 
 /**
@@ -633,8 +685,7 @@ Checkbox.prototype.setDisabled = function (value){
 var CheckboxGroup = function ($target, data, options){
   this.data = data;
   this.opts = $.extend({
-    selectedMask: false,
-    selectedItems: false,
+    selected: false, /* array of indexes */
     disabled: false
   }, options);
   this.$wrap = $("<div class='checkbox_group'></div>");
@@ -647,10 +698,17 @@ var CheckboxGroup = function ($target, data, options){
   }.bind(this));
   $target.replaceWith(this.$wrap);
 
-  if (this.opts.selectedMask !== false)
-    this.setMask(this.opts.selectedMask);
-  if (this.opts.selectedItems !== false)
+  if (this.opts.selected !== false)
     this.setChecked(this.opts.selectedItems, true);
+};
+/**
+ * Установить значение всех чекбоксов
+ * @param value
+ */
+CheckboxGroup.prototype.setCheckedAll = function (value){
+  this.checkboxes.forEach(function (checkbox){
+    checkbox.setChecked(value);
+  });
 };
 /**
  * Установить значение у опр. чекбокса
@@ -684,19 +742,10 @@ CheckboxGroup.prototype.getCheckedIds = function (){
   return ret;
 };
 /**
- * Установить значение всех чекбоксов
- * @param value
- */
-CheckboxGroup.prototype.setCheckedAll = function (value){
-  this.checkboxes.forEach(function (checkbox){
-    checkbox.setChecked(value);
-  });
-};
-/**
  * Установка checkbox по маске
  * @param mask
  */
-CheckboxGroup.prototype.setMask = function (mask){
+CheckboxGroup.prototype.setCheckedByMask = function (mask){
   this.opts.selectedMask = mask;
   this.checkboxes.forEach(function (checkbox, index){
     this.setCheckedItem(index, checkbox.data["id"] & mask);
@@ -1142,6 +1191,13 @@ Datepicker.prototype.choose = function (date){
     (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()));
   this.fill();
 };
+Datepicker.prototype.selectByDate = function(date){
+  date = /^(\d{4})(\d{2})(\d{2})$/.exec(date);
+  if (date){
+    date = { year: parseInt(date[1]), month: parseInt(date[2]) - 1, date: parseInt(date[3]) };
+    this.choose(date);
+  }
+};
 /**
  * Предыдущий месяц
  */
@@ -1454,7 +1510,7 @@ var PhotoViewer = {
   source: "/act/photo_viewer.php",
 
   xhr: null,
-  id_photo: false,
+  photo: { id: false, object: false, hash: false },
   photos: [],
   offset: 0,
   $photo: null,
@@ -1465,7 +1521,7 @@ var PhotoViewer = {
   $next: null,
   $close: null,
   $summary: null,
-  $photo_wrap: null
+  $photoWrap: null
 };
 /**
  * Инициализация
@@ -1505,13 +1561,13 @@ PhotoViewer.init = function (){
     PopupCollection.pop();
   });
   this.$summary = this.$wrap.find(".photo_viewer_summary");
-  this.$photo_wrap = this.$wrap.find(".photo_viewer_wrap");
+  this.$photoWrap = this.$wrap.find(".photo_viewer_wrap");
 };
 /**
  * Открытие просмотра фотографии
- * @param id_photo
+ * @param info
  */
-PhotoViewer.show = function (id_photo){
+PhotoViewer.show = function (info){
   $(document).on("keydown.photo_viewer", this, function (event){
     var self = event.data;
     switch (event.keyCode) {
@@ -1526,16 +1582,18 @@ PhotoViewer.show = function (id_photo){
   this.$prev.hide();
   this.$next.hide();
 
-  this.id_photo = id_photo;
+  this.photo.id = info.photo ? info.photo : false;
+  this.photo.object = info.object ? info.object : false;
+  this.photo.hash = info.hash ? info.hash : false;
   this.photos = [];
   this.offset = 0;
 
-  this.$photo_wrap.empty();
+  this.$photoWrap.empty();
   this.popup.show();
   this.xhr = $.ajax({
     url: this.source,
     method: "post",
-    data: { id_photo: this.id_photo },
+    data: this.photo,
     dataType: "json",
     success: function (data){
       if (data.status === "success") {
@@ -1566,7 +1624,7 @@ PhotoViewer.hide = function(){
  * Показ фотографии
  */
 PhotoViewer.showPhoto = function (){
-  this.$photo_wrap.empty();
+  this.$photoWrap.empty();
   var count_photos = this.photos.length;
   if (count_photos > 1) {
     this.$prev.show();
@@ -1576,7 +1634,7 @@ PhotoViewer.showPhoto = function (){
     this.$summary.text("Просмотр фотографии");
   }
   this.$photo = $("<img src='" + this.photos[this.offset].source + "' />");
-  this.$photo_wrap.append(this.$photo);
+  this.$photoWrap.append(this.$photo);
   if (count_photos > 1) {
     this.$photo.wrap("<a></a>").closest("a").on("click", this, function(event){
       event.data.nextPhoto();
@@ -1845,6 +1903,7 @@ Menu.prototype.close = function (){
 var Tooltip = function ($target, options){
   this.$target = $target;
   this.opts = $.extend({
+    width: false,
     message: "",
     position: "top",
     delay: 0,
@@ -1857,6 +1916,8 @@ var Tooltip = function ($target, options){
     "<div class='pointer'></div>" +
     "<div class='message'>" + this.opts.message + "</div>" +
   "</div>");
+  if (this.opts.width)
+    this.$wrap.css("width", this.opts.width);
   this.$wrap.addClass(this.opts.position);
   $("body").append(this.$wrap);
   this.$target.on("mouseenter", this, function (event){
@@ -1866,6 +1927,9 @@ var Tooltip = function ($target, options){
     event.data.hide();
   });
 };
+/**
+ * Показать
+ */
 Tooltip.prototype.show = function (){
   clearTimeout(this.timeOut);
   var targetInfo = {
@@ -1921,10 +1985,20 @@ Tooltip.prototype.show = function (){
     .stop()
     .animate({ left: finish.left, top: finish.top, opacity: 1 }, this.opts.showDt);
 };
+/**
+ * Скрыть
+ */
 Tooltip.prototype.hide = function (){
   this.timeOut = setTimeout(function (){
     this.$wrap.stop().fadeOut(this.opts.hideDt, function (){ this.open = false; }.bind(this));
   }.bind(this), this.opts.delay);
+};
+/**
+ * Удалить
+ */
+Tooltip.prototype.remove = function(){
+  this.$target.off("mouseenter mouseleave");
+  this.$wrap.remove();
 };
 
 

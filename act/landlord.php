@@ -36,13 +36,52 @@ function find_by_phone()
     while($row = $res->fetch_assoc())
     {
       $landlord["id"] = $row["id"];
-      $landlord["name"] = $row["name"];
+      $landlord["name"] = text($row["name"]);
       $landlord["phones"][] = $row["phone"];
     }
     $res->close();
     $stmt->close();
     $response->set_value("landlord", $landlord);
   }
+}
+
+/**
+ * Данные о арендодателях
+ */
+function get_by_id()
+{
+  $response = __response::get_instance();
+  $db = __database::get_instance();
+
+  $object_id = __data::post("id", "u");
+
+  $landlord = array();
+  $q = "select
+            `landlords`.`id`, `landlords`.`name`, GROUP_CONCAT(`phones`.`phone`) `phone`
+          from
+            `landlords_flats`
+            left join `landlords` on `landlords`.`id` = `landlords_flats`.`id_landlord`
+            left join `phones` on `phones`.`id_landlord` = `landlords_flats`.`id_landlord`
+          where
+            `landlords_flats`.`id_flat` = ?
+          group by
+            `landlords_flats`.`id_landlord`";
+  $stmt = $db->prepare($q) or die($db->error);
+  $stmt->bind_param("i", $object_id);
+  $stmt->execute() or die($db->error);
+  $res = $stmt->get_result();
+  while($row = $res->fetch_assoc())
+  {
+    $landlord[] = array(
+      "id" => $row["id"],
+      "name" => text($row["name"]),
+      "phones" => explode(",", $row["phone"])
+    );
+  }
+  $res->close();
+  $stmt->close();
+
+  $response->set_value("landlord", $landlord);
 }
 
 $core = __core::get_instance();
@@ -54,6 +93,9 @@ switch(__data::get("act"))
 {
 case "find_by_phone":
   find_by_phone();
+  break;
+case "get_by_id":
+  get_by_id();
   break;
 }
 

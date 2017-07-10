@@ -68,7 +68,19 @@
 }
 
 .landlord_wrap {
+  position: relative;
   margin-bottom: 10px;
+  &.loading:before {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding-left: 20px;
+    color: #26A65B;
+    content: 'Загрузка арендодателей';
+    line-height: 16px;
+    background: url(/template/images/loading.gif) 0 0 no-repeat;
+  }
   .input {
     margin-bottom: 0;
   }
@@ -147,6 +159,15 @@
   //}
   .uploaded {
     overflow: hidden;
+    &.loading:before {
+      display: block;
+      padding-left: 20px;
+      margin-bottom: 10px;
+      color: #26A65B;
+      content: 'Загрузка фотографий';
+      line-height: 16px;
+      background: url(/template/images/loading.gif) 0 0 no-repeat;
+    }
     .cover {
       max-width: 100px;
       height: 60px;

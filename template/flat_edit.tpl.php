@@ -35,25 +35,47 @@ $hash = md5(microtime());
   <?php require_once "head.php" ?>
   <script>
     var params = {
+      id: <?= json_encode($object_id) ?>,
       hash: <?= json_encode($hash) ?>,
-      source: <?= json_encode(array(FLAT_SOURCE, __ui::get_index(FLAT_SOURCE, $object["source"]))) ?>,
+      coords: <?= json_encode(array($object["lat"], $object["lon"])) ?>,
+      zoom: 16,
+      source: <?= json_encode(array(to_select(FLAT_SOURCE), $object["source"])) ?>,
       exclusive: <?= json_encode(array(FLAT_EXCLUSIVE, $object["exclusive"])) ?>,
       quickly: <?= json_encode(array(FLAT_QUICKLY, $object["quickly"])) ?>,
-      region: <?= json_encode(get_regions()) ?>,
-      countRooms: <?= json_encode(array(FLAT_COUNT_ROOMS, __ui::get_index(FLAT_COUNT_ROOMS, $object["count_rooms"]))) ?>,
+      region: <?= json_encode(array(to_select(get_regions(), true), $object["id_region"])) ?>,
+      streetId: <?= json_encode($object["id_street"]) ?>,
+      streetName: <?= json_encode($object["name_street"]) ?>,
+      guide: <?= json_encode(text($object["guide"])) ?>,
+      house: <?= json_encode(text($object["house"])) ?>,
+      flat: <?= json_encode(text($object["flat"])) ?>,
+      countRooms: <?= json_encode(array(to_select(FLAT_COUNT_ROOMS), $object["count_rooms"])) ?>,
       relatedRooms: <?= json_encode(array(FLAT_RELATIVE_ROOMS, $object["related_rooms"])) ?>,
+      squareGeneral: <?= json_encode($object["square_general"]) ?>,
+      squareLiving: <?= json_encode($object["square_living"]) ?>,
+      squareKitchen: <?= json_encode($object["square_kitchen"]) ?>,
+      floor: <?= json_encode($object["floor"]) ?>,
+      floors: <?= json_encode($object["floors"]) ?>,
+      countSleeps: <?= json_encode($object["count_sleeps"]) ?>,
       furniture: <?= json_encode(array(FLAT_FURNITURE, $object["furniture"])) ?>,
-      multimedia: <?= json_encode(FLAT_MULTIMEDIA) ?>,
-      comfort: <?= json_encode(FLAT_COMFORT) ?>,
-      additionally: <?= json_encode(FLAT_ADDITIONALLY) ?>,
-      wc: <?= json_encode(FLAT_WC) ?>,
-      heating: <?= json_encode(FLAT_HEATING) ?>,
-      hotWater: <?= json_encode(FLAT_HOT_WATER) ?>,
-      window: <?= json_encode(FLAT_WINDOW) ?>,
-      state: <?= json_encode(FLAT_STATE) ?>,
-      typeBalcony: <?= json_encode(FLAT_TYPE_BALCONY) ?>,
-      priceAdditionally: <?= json_encode(FLAT_PRICE_ADDITIONALLY) ?>,
-      forWhom: <?= json_encode(FLAT_FOR_WHOM) ?>
+      multimedia: <?= json_encode(array(FLAT_MULTIMEDIA, $object["multimedia"])) ?>,
+      comfort: <?= json_encode(array(FLAT_COMFORT, $object["comfort"])) ?>,
+      additionally: <?= json_encode(array(FLAT_ADDITIONALLY, $object["additionally"])) ?>,
+      wc: <?= json_encode(array(to_select(FLAT_WC), $object["wc"])) ?>,
+      heating: <?= json_encode(array(to_select(FLAT_HEATING), $object["heating"])) ?>,
+      hotWater: <?= json_encode(array(to_select(FLAT_HOT_WATER), $object["hot_water"])) ?>,
+      window: <?= json_encode(array(to_select(FLAT_WINDOW), $object["window"])) ?>,
+      state: <?= json_encode(array(to_select(FLAT_STATE), $object["state"])) ?>,
+      countBalcony: <?= json_encode($object["count_balcony"]) ?>,
+      typeBalcony: <?= json_encode(array(to_select(FLAT_TYPE_BALCONY), $object["type_balcony"])) ?>,
+      description: <?= json_encode(text($object["description"])) ?>,
+      serviceMark: <?= json_encode(text($object["service_mark"])) ?>,
+      datePrice: <?= json_encode($object["date_price"]) ?>,
+      dateRent: <?= json_encode($object["date_rent"]) ?>,
+      price: <?= json_encode($object["price"]) ?>,
+      guaranty: <?= json_encode($object["guaranty"]) ?>,
+      prepayment: <?= json_encode($object["prepayment"]) ?>,
+      priceAdditionally: <?= json_encode(array(FLAT_PRICE_ADDITIONALLY, $object["price_additionally"])) ?>,
+      forWhom: <?= json_encode(array(FLAT_FOR_WHOM, $object["for_whom"])) ?>
     };
   </script>
 </head>
@@ -65,12 +87,13 @@ $hash = md5(microtime());
   <?php require_once "header.php" ?>
 
   <div class="page_title">
-    <h1>Добавление квартиры на аренду</h1>
+    <h1>Редактирование квартиры на аренду</h1>
   </div>
 
 	<main class="content">
 
-    <form id="form_flat_add" action="/act/objects.php?act=flat_add" method="post">
+    <form id="form_flat_edit" action="/act/flat.php?act=flat_edit" method="post">
+      <input type="hidden" name="id" value="<?= $object_id ?>" />
       <input type="hidden" name="hash" value="<?= $hash ?>" />
       <div class="popup_content">
         <table class="column">
@@ -307,7 +330,12 @@ $hash = md5(microtime());
             </td>
           </tr>
         </table>
-        <button class="button" type="submit"><span class="button_caption">Создать</span></button>
+        <table>
+          <tr>
+            <td><button class="button" type="submit"><span class="button_caption">Сохранить</span></button></td>
+            <td><button class="button" type="button"><span class="button_caption">В архив</span></button></td>
+          </tr>
+        </table>
       </div>
     </form>
 

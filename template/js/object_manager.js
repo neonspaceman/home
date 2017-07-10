@@ -43,6 +43,27 @@ var Landlord = function ($target){
 
   $target.replaceWith(this.$wrap);
 };
+Landlord.prototype.load = function (objectId){
+  this.$wrap.addClass("loading");
+  $.ajax({
+    url: "/act/landlord.php?act=get_by_id",
+    type: "post",
+    data: { id: objectId },
+    dataType: "json",
+    success: function (data){
+      data.landlord.forEach(function(item){
+        this.phones.addArray(item.phones);
+        this.createLandlord(item.id, item.name, item.phones);
+      }.bind(this));
+    }.bind(this),
+    error: function (){
+      new MessageBox({ message: "При загрузке арендодателей произошла ошибка, обновите страницу и повторите попытку." });
+    },
+    complete: function(){
+      this.$wrap.removeClass("loading");
+    }.bind(this)
+  });
+};
 /**
  * Создание dom дерево нового арендодателя
  * @param id - идентификатор (0 - необходимо создать нового арендодателя)
@@ -364,7 +385,6 @@ Map.prototype.isBusy = function(){
  */
 var Uploader = function ($target, options){
   this.opts = $.extend({
-    obj: false,
     maxWidth: 4000,
     maxHeight: 4000,
     maxSize: 2 // мб
@@ -385,8 +405,8 @@ var Uploader = function ($target, options){
     "<button type='button' class='button'>" +
     "<span class='button_caption'><i class='fa fa-camera'></i>Прикрепить фотографии</span>" +
     "<span class='progress'>" +
-    "<span class='back'><div class='inner'>2 файла из 8</div></span>" +
-    "<span class='front' style='width: 50%;'><div class='inner'>2 файла из 8</div></span>" +
+    "<span class='back'><div class='inner'></div></span>" +
+    "<span class='front'><div class='inner'></div></span>" +
     "</span>" +
     "</button>" +
     "</div>");
@@ -482,6 +502,28 @@ var Uploader = function ($target, options){
   //   }
   //   Common.preventDefault(event);
   // });
+};
+/**
+ * Загрузка ране загруженных фотографий
+ */
+Uploader.prototype.load = function (objectId){
+  var $uploaded = this.$wrap.find(".uploaded");
+  $uploaded.addClass("loading");
+  $.ajax({
+    type: "post",
+    url: "/act/uploader.php?act=load_images_by_id",
+    data: { id: objectId },
+    dataType: "json",
+    success: function(data){
+      data.images.forEach(function(item){ this.addThumb(item); }.bind(this));
+    }.bind(this),
+    error: function(){
+      new MessageBox({ message: "При загрузке фотографий произошла ошибка, обновите страницу и повторите попытку." });
+    },
+    complete: function(){
+      $uploaded.removeClass("loading");
+    }
+  });
 };
 /**
  * Отправка выбранных файлов на зарузку
@@ -632,23 +674,17 @@ Uploader.prototype.uploaded = function (){
  */
 Uploader.prototype.addThumb = function (info){
   var $img = $("<div class='cover'>" +
-    "<img src='" + info.thumb + "' /><a class='remove' title='Удалить'></a>" +
+    "<img src='" + info.thumb + "' /><a class='remove'></a>" +
     "<input type='hidden' name='uploader[]' value='" + info.id + "' />" +
-    "</div>");
+  "</div>");
+  var tooltip = new Tooltip($img.find("a"), { message: "Открепить", width: "80" });
   $img.on("click", function (){
-    PhotoViewer.show(info.id);
+    PhotoViewer.show({ photo: info.id, object: params.id, hash: params.hash });
   });
-  $img.find("a").on("click", function(){
-    $.ajax({
-      url: "/act/uploader.php?act=remove_image",
-      method: "post",
-      data: { id: info.id },
-      dataType: "json",
-      error: function(){
-        new MessageBox({ message: "При удалении фотографии произошла ошибка, обновите страницу и повторите попытку." });
-      }
-    });
+  $img.find("a").on("click", function(event){
     $(this).closest(".cover").remove();
+    tooltip.remove();
+    event.stopPropagation();
   });
   this.$wrap.find(".uploaded").append($img);
 };

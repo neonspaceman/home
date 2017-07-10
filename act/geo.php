@@ -35,6 +35,31 @@ function street_find()
   $response->set_value("matches", $matches);
 }
 
+function street_find_by_id()
+{
+  $db = __database::get_instance();
+  $response = __response::get_instance();
+
+  $id = __data::post("id", "u");
+
+  $street_name = null;
+  $q = "select `name` from `streets` where `id` = ? limit 1";
+  $stmt = $db->prepare($q) or die($db->error);
+  $stmt->bind_param("i", $id);
+  $stmt->execute() or die($db->error);
+  $stmt->bind_result($street_name);
+  $stmt->fetch();
+  $stmt->close();
+
+  if (!$street_name)
+  {
+    $response->error("not find street");
+    return;
+  }
+
+  $response->set_value("matches", array("id" => $id, "caption" => $street_name));
+}
+
 /**
  * Получение информации с сайта жкх-чита.рф
  * @param $city - город
@@ -162,6 +187,9 @@ switch(__data::get("act"))
 {
 case "street_find":
   street_find();
+  break;
+case "street_find_by_id":
+  street_find_by_id();
   break;
 case "get_images":
   get_images();

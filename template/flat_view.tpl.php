@@ -247,7 +247,7 @@ $object["price_additionally"] = __ui::get_values_by_mask(FLAT_PRICE_ADDITIONALLY
         <div class="group_options">
           <div class="option">
             <div class="option_label">Дополнительное описание:</div>
-            <div class="option_value"><?php print_t($object["description"]) ?></div>
+            <div class="option_value"><?= text($object["description"]) ?></div>
           </div>
         </div>
         <?php
@@ -256,7 +256,7 @@ $object["price_additionally"] = __ui::get_values_by_mask(FLAT_PRICE_ADDITIONALLY
         <div class="group_options">
           <div class="option">
             <div class="option_label">Служебные пометки:</div>
-            <div class="option_value"><?php print_t($object["service_mark"]) ?></div>
+            <div class="option_value"><?= text($object["service_mark"]) ?></div>
             </div>
           </div>
         <?php
@@ -282,7 +282,7 @@ $object["price_additionally"] = __ui::get_values_by_mask(FLAT_PRICE_ADDITIONALLY
           while($landlord = $res->fetch_assoc()):
           ?>
           <div class="option">
-            <span class="option_label"><?php print_t($landlord["name"]) ?></span>
+            <span class="option_label"><?= text($landlord["name"]) ?></span>
             <span class="option_value">
             <?php
             $phones = explode(",", $landlord["phone"]);
@@ -373,12 +373,12 @@ $object["price_additionally"] = __ui::get_values_by_mask(FLAT_PRICE_ADDITIONALLY
         ?>
           <div class="option">
             <span class="option_label">Адрес:</span>
-            <span class="option_value"><?php print_t($str_address) ?></span>
+            <span class="option_value"><?= text($str_address) ?></span>
           </div>
           <?php if (!empty($object["guide"])): ?>
           <div class="option">
             <span class="option_label">Ориентир:</span>
-            <span class="option_value"><?php print_t($object["guide"]) ?></span>
+            <span class="option_value"><?= text($object["guide"]) ?></span>
           </div>
           <?php endif; ?>
           <div id="map" class="option map"><div class="map_loading"><span>Загрузка</span></div></div>

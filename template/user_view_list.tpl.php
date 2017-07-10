@@ -64,8 +64,8 @@ $offset = get_offset(RECORDS_ON_PAGE, $count_users);
       while($row = $res->fetch_assoc()):
       ?>
       <tr>
-        <td><a onclick="Users.edit(<?= $row["id"] ?>)"><?php print_t($row["name"]) ?></a></td>
-        <td><?php print_t($row["code"]) ?></td>
+        <td><a onclick="Users.edit(<?= $row["id"] ?>)"><?= text($row["name"]) ?></a></td>
+        <td><?= text($row["code"]) ?></td>
         <td><span data-timestamp="<?= $row["time_create"] ?>"</td>
         <td>
           <?php
@@ -78,8 +78,8 @@ $offset = get_offset(RECORDS_ON_PAGE, $count_users);
           ?>
         </td>
         <td class="action">
-          <a onclick="Users.newCode('<?php print_t($row["name"]) ?>', <?= $row["id"] ?>)">Новый код доступа</a>
-          <a onclick="Users.remove('<?php print_t($row["name"]) ?>', <?= $row["id"] ?>)">Удалить</a>
+          <a onclick="Users.newCode('<?= text($row["name"]) ?>', <?= $row["id"] ?>)">Новый код доступа</a>
+          <a onclick="Users.remove('<?= text($row["name"]) ?>', <?= $row["id"] ?>)">Удалить</a>
         </td>
       </tr>
       <?php

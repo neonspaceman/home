@@ -10,22 +10,22 @@ $hash = md5(microtime());
   <script>
     var params = {
       hash: <?= json_encode($hash) ?>,
-      source: <?= json_encode(FLAT_SOURCE) ?>,
+      source: <?= json_encode(to_select(FLAT_SOURCE)) ?>,
       exclusive: <?= json_encode(FLAT_EXCLUSIVE) ?>,
       quickly: <?= json_encode(FLAT_QUICKLY) ?>,
-      region: <?= json_encode(get_regions()) ?>,
-      countRooms: <?= json_encode(FLAT_COUNT_ROOMS) ?>,
+      region: <?= json_encode(to_select(get_regions(), true)) ?>,
+      countRooms: <?= json_encode(to_select(FLAT_COUNT_ROOMS)) ?>,
       relatedRooms: <?= json_encode(FLAT_RELATIVE_ROOMS) ?>,
       furniture: <?= json_encode(FLAT_FURNITURE) ?>,
       multimedia: <?= json_encode(FLAT_MULTIMEDIA) ?>,
       comfort: <?= json_encode(FLAT_COMFORT) ?>,
       additionally: <?= json_encode(FLAT_ADDITIONALLY) ?>,
-      wc: <?= json_encode(FLAT_WC) ?>,
-      heating: <?= json_encode(FLAT_HEATING) ?>,
-      hotWater: <?= json_encode(FLAT_HOT_WATER) ?>,
-      window: <?= json_encode(FLAT_WINDOW) ?>,
-      state: <?= json_encode(FLAT_STATE) ?>,
-      typeBalcony: <?= json_encode(FLAT_TYPE_BALCONY) ?>,
+      wc: <?= json_encode(to_select(FLAT_WC)) ?>,
+      heating: <?= json_encode(to_select(FLAT_HEATING)) ?>,
+      hotWater: <?= json_encode(to_select(FLAT_HOT_WATER)) ?>,
+      window: <?= json_encode(to_select(FLAT_WINDOW)) ?>,
+      state: <?= json_encode(to_select(FLAT_STATE)) ?>,
+      typeBalcony: <?= json_encode(to_select(FLAT_TYPE_BALCONY)) ?>,
       priceAdditionally: <?= json_encode(FLAT_PRICE_ADDITIONALLY) ?>,
       forWhom: <?= json_encode(FLAT_FOR_WHOM) ?>
     };
@@ -44,7 +44,7 @@ $hash = md5(microtime());
 
 	<main class="content">
 
-    <form id="form_flat_add" action="/act/objects.php?act=flat_add" method="post">
+    <form id="form_flat_add" action="/act/flat.php?act=flat_add" method="post">
       <input type="hidden" name="hash" value="<?= $hash ?>" />
       <div class="popup_content">
         <table class="column">

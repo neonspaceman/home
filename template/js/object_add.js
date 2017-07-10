@@ -36,9 +36,7 @@ Form.init = function(){
   new Counter($("input[name='square_general']"), { minValue: 0, isFloat: true });
   new Counter($("input[name='square_living']"), { minValue: 0, isFloat: true });
   new Counter($("input[name='square_kitchen']"), { minValue: 0, isFloat: true });
-  new CheckboxGroup($("input[name='furniture']"), params.furniture[0], {
-    selectedMask: params.furniture[1]
-  });
+  new CheckboxGroup($("input[name='furniture']"), params.furniture);
   new Counter($("input[name='floor']"), { minValue: 0 });
   new Counter($("input[name='floors']"), { minValue: 0 });
   new Counter($("input[name='count_sleeps']"), { minValue: 0 });
