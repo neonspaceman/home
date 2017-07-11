@@ -4,6 +4,7 @@ class flat extends __page
 {
   public function view_list()
   {
+    $this->set_title("Аренда квартир в Чите");
     $this->insert_style("/template/ion.rangeSlider-2.1.7/css/ion.rangeSlider.css", time());
     $this->insert_script("/template/ion.rangeSlider-2.1.7/js/ion.rangeSlider.min.js");
     $this->insert_style("/template/css/ui.css", time());
@@ -18,7 +19,7 @@ class flat extends __page
     $this->insert_script("//api-maps.yandex.ru/2.1/?lang=ru_RU");
     $this->insert_style("/template/css/object_manager.css", time());
     $this->insert_script("/template/js/object_manager.js", time());
-    $this->insert_script("/template/js/object_add.js", time());
+    $this->insert_script("/template/js/flat_add.js", time());
     $this->set_template("flat_add");
   }
 
@@ -36,7 +37,7 @@ class flat extends __page
     $stmt->fetch();
     $stmt->close();
 
-    $this->set_title("Просмотр квартиры");
+    $this->set_title("Просмотр квартиры на аренду");
     if ($object_exists)
     {
       $this->insert_script("//api-maps.yandex.ru/2.1/?lang=ru_RU");

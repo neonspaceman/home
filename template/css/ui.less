@@ -195,14 +195,16 @@ textarea.input {
       left: 0;
       top: 0;
       overflow: hidden;
-      .rounded(2px);
+      .rounded(50%);
       border: 1px solid #E0E4E7;
       text-align: center;
       i {
         display: none;
-        font-size: 10px;
-        line-height: 12px;
-        color: #fff;
+        width: 8px;
+        height: 8px;
+        margin: 3px auto 0;
+        .rounded(50%);
+        background: #26A65B;
       }
     }
   }
@@ -215,14 +217,9 @@ textarea.input {
     border-color: #26A65B;
   }
   input:checked ~ a .ico {
-    border-color: #26A65B;
-    background: #26A65B;
     i {
       display: block;
     }
-  }
-  input:checked ~ a:hover .ico i {
-    .opacity(0.8);
   }
   input[disabled] ~ a {
     cursor: default;

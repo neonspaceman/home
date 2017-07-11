@@ -6,20 +6,20 @@ $db = __database::get_instance();
 $user = __user::get_instance();
 
 $object_id = __data::get("id", "u");
-$object_type = "flat";
+$object_type = "room";
 $q = "select
-        `flats`.`id`, `source`, `exclusive`, `quickly`, `id_region`, `id_street`, `house`, `flat`, `guide`, `lon`, `lat`,
+        `rooms`.`id`, `source`, `exclusive`, `quickly`, `id_region`, `id_street`, `house`, `flat`, `guide`, `lon`, `lat`,
         `count_rooms`, `related_rooms`, `count_sleeps`, `floor`, `floors`, `square_general`, `square_living`, `square_kitchen`,
         `state`, `heating`, `hot_water`, `wc`, `window`, `furniture`, `count_balcony`, `type_balcony`,
         `multimedia`, `comfort`, `additionally`, `date_rent`, `prepayment`, `for_whom`, `description`,
         `date_price`, `price`, `guaranty`, `price_additionally`, `service_mark`, `time_create`, `visibility`,
         `streets`.`name` `name_street`, `regions`.`name` `name_region`, `regions`.`parent` `id_parent_region`
       from 
-        `flats` 
-        left join `streets` on `streets`.`id` = `flats`.`id_street`
-        left join `regions` on `regions`.`id` = `flats`.`id_region`
+        `rooms` 
+        left join `streets` on `streets`.`id` = `rooms`.`id_street`
+        left join `regions` on `regions`.`id` = `rooms`.`id_region`
       where 
-        `flats`.`id` = ?
+        `rooms`.`id` = ?
       limit 1";
 $stmt = $db->prepare($q) or die($db->error);
 $stmt->bind_param("i", $object_id);

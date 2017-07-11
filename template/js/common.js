@@ -771,7 +771,7 @@ var Radio = function ($target, data, options){
 
   this.$wrap = $("<div class='radio'>" +
     "<input name='" + $target.attr("name") + "' type='radio' value='" + data["id"] + "' />" +
-    "<a><div class='ico'><i class='fa fa-check' aria-hidden='true'></i></div>" + data["caption"] + "</a>" +
+    "<a><div class='ico'><i></i></div>" + data["caption"] + "</a>" +
     "</div>");
   $target.replaceWith(this.$wrap);
 
@@ -804,20 +804,21 @@ Radio.prototype.setDisabled = function (value){
 var RadioGroup = function ($target, data, options){
   this.data = data;
   this.opts = $.extend({
-    selected: 0,
+    selected: false,
     disabled: false
   }, options);
   this.$wrap = $("<div class='radio_group'></div>");
 
   this.radioes = [];
   this.data.forEach(function (val){
-    var radio = new Radio($("<input name='" + $target.attr("name") + "[]' />"), val);
+    var radio = new Radio($("<input name='" + $target.attr("name") + "' />"), val);
     this.radioes.push(radio);
     this.$wrap.append(radio.$wrap);
   }.bind(this));
   $target.replaceWith(this.$wrap);
 
-  this.select(this.opts.selected);
+  if (this.opts.selected !== false)
+    this.select(this.opts.selected);
 };
 RadioGroup.prototype.select = function (index){
   this.radioes[index].select();
@@ -1510,7 +1511,7 @@ var PhotoViewer = {
   source: "/act/photo_viewer.php",
 
   xhr: null,
-  photo: { id: false, object: false, hash: false },
+  photo: { id: false, object: false, type: false, hash: false },
   photos: [],
   offset: 0,
   $photo: null,
@@ -1568,6 +1569,7 @@ PhotoViewer.init = function (){
  * @param info
  */
 PhotoViewer.show = function (info){
+  console.log(info);
   $(document).on("keydown.photo_viewer", this, function (event){
     var self = event.data;
     switch (event.keyCode) {
@@ -1584,6 +1586,7 @@ PhotoViewer.show = function (info){
 
   this.photo.id = info.photo ? info.photo : false;
   this.photo.object = info.object ? info.object : false;
+  this.photo.type = info.type ? info.type : false;
   this.photo.hash = info.hash ? info.hash : false;
   this.photos = [];
   this.offset = 0;

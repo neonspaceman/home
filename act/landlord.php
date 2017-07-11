@@ -54,20 +54,21 @@ function get_by_id()
   $db = __database::get_instance();
 
   $object_id = __data::post("id", "u");
+  $object_type = __data::post("type", "s");
 
   $landlord = array();
   $q = "select
             `landlords`.`id`, `landlords`.`name`, GROUP_CONCAT(`phones`.`phone`) `phone`
           from
-            `landlords_flats`
-            left join `landlords` on `landlords`.`id` = `landlords_flats`.`id_landlord`
-            left join `phones` on `phones`.`id_landlord` = `landlords_flats`.`id_landlord`
+            `landlords_objects`
+            left join `landlords` on `landlords`.`id` = `landlords_objects`.`id_landlord`
+            left join `phones` on `phones`.`id_landlord` = `landlords_objects`.`id_landlord`
           where
-            `landlords_flats`.`id_flat` = ?
+            `landlords_objects`.`id_object` = ? and `landlords_objects`.`type_object` = ?
           group by
-            `landlords_flats`.`id_landlord`";
+            `landlords_objects`.`id_landlord`";
   $stmt = $db->prepare($q) or die($db->error);
-  $stmt->bind_param("i", $object_id);
+  $stmt->bind_param("is", $object_id, $object_type);
   $stmt->execute() or die($db->error);
   $res = $stmt->get_result();
   while($row = $res->fetch_assoc())

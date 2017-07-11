@@ -27,12 +27,11 @@ Form.init = function(){
   });
   new Select($("input[name='count_rooms']"), params.countRooms, {
     onChoose: function(index) {
-      relatedRooms.setDisabled(index > 2);
+      relatedRooms.setDisabled(index < 3);
     }
   });
-  var relatedRooms = new Checkbox($("input[name='related_rooms']"), params.relatedRooms, {
-    disabled: false
-  });
+  var relatedRooms = new Checkbox($("input[name='related_rooms']"), params.relatedRooms, { disabled: true });
+  new RadioGroup($("input[name='type_of_room']"), params.typeOfRoom, { selected: 0 });
   new Counter($("input[name='square_general']"), { minValue: 0, isFloat: true });
   new Counter($("input[name='square_living']"), { minValue: 0, isFloat: true });
   new Counter($("input[name='square_kitchen']"), { minValue: 0, isFloat: true });
@@ -66,10 +65,10 @@ Form.init = function(){
   });
   new CheckboxGroup($("input[name='price_additionally']"), params.priceAdditionally);
   new CheckboxGroup($("input[name='for_whom']"), params.forWhom);
-  this.map = new Map($("#flat_map"));
+  this.map = new Map($("#object_map"));
   this.uploader = new Uploader($("#uploader"));
   this.findPhotos = new FindPhotos(this.uploader);
-  $("#form_flat_add").ajaxForm({
+  $("#form_room_add").ajaxForm({
     dataType: "json",
     beforeSubmit: function(arr, $form, options){
       var error = "";
@@ -90,7 +89,7 @@ Form.init = function(){
     }.bind(this),
     success: function(data, status, xhr, $form){
       if (data.status === "success") {
-        location.href = "/flat/view?id=" + data.id;
+        location.href = "/room/view?id=" + data.id;
       } else {
         var wrap_message = "";
         data.message.every(function(message){

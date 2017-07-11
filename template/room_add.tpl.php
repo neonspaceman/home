@@ -1,31 +1,5 @@
 <?php
 require_once ROOT . "/resource/object_values.php";
-
-$db = __database::get_instance();
-
-$object_id = __data::get("id", "u");
-$q = "select
-        `flats`.`id`, `source`, `exclusive`, `quickly`, `id_region`, `id_street`, `house`, `flat`, `guide`, `lon`, `lat`,
-        `count_rooms`, `related_rooms`, `count_sleeps`, `floor`, `floors`, `square_general`, `square_living`, `square_kitchen`,
-        `state`, `heating`, `hot_water`, `wc`, `window`, `furniture`, `count_balcony`, `type_balcony`,
-        `multimedia`, `comfort`, `additionally`, `date_rent`, `prepayment`, `for_whom`, `description`,
-        `date_price`, `price`, `guaranty`, `price_additionally`, `service_mark`, `time_create`, `visibility`,
-        `streets`.`name` `name_street`, `regions`.`name` `name_region`, `regions`.`parent` `id_parent_region`
-      from 
-        `flats` 
-        left join `streets` on `streets`.`id` = `flats`.`id_street`
-        left join `regions` on `regions`.`id` = `flats`.`id_region`
-      where 
-        `flats`.`id` = ?
-      limit 1";
-$stmt = $db->prepare($q) or die($db->error);
-$stmt->bind_param("i", $object_id);
-$stmt->execute() or die($db->error);
-$res = $stmt->get_result();
-$object = $res->fetch_assoc();
-$res->close();
-$stmt->close();
-
 $hash = md5(microtime());
 ?>
 <!DOCTYPE html>
@@ -35,48 +9,26 @@ $hash = md5(microtime());
   <?php require_once "head.php" ?>
   <script>
     var params = {
-      objectId: <?= json_encode($object_id) ?>,
-      objectType: "flat",
       hash: <?= json_encode($hash) ?>,
-      coords: <?= json_encode(array($object["lat"], $object["lon"])) ?>,
-      zoom: 16,
-      source: <?= json_encode(array(to_select(OBJECT_SOURCE), $object["source"])) ?>,
-      exclusive: <?= json_encode(array(OBJECT_EXCLUSIVE, $object["exclusive"])) ?>,
-      quickly: <?= json_encode(array(OBJECT_QUICKLY, $object["quickly"])) ?>,
-      region: <?= json_encode(array(to_select(get_regions(), true), $object["id_region"])) ?>,
-      streetId: <?= json_encode($object["id_street"]) ?>,
-      streetName: <?= json_encode($object["name_street"]) ?>,
-      guide: <?= json_encode(text($object["guide"])) ?>,
-      house: <?= json_encode(text($object["house"])) ?>,
-      flat: <?= json_encode(text($object["flat"])) ?>,
-      countRooms: <?= json_encode(array(to_select(OBJECT_COUNT_ROOMS), $object["count_rooms"])) ?>,
-      relatedRooms: <?= json_encode(array(OBJECT_RELATIVE_ROOMS, $object["related_rooms"])) ?>,
-      squareGeneral: <?= json_encode($object["square_general"]) ?>,
-      squareLiving: <?= json_encode($object["square_living"]) ?>,
-      squareKitchen: <?= json_encode($object["square_kitchen"]) ?>,
-      floor: <?= json_encode($object["floor"]) ?>,
-      floors: <?= json_encode($object["floors"]) ?>,
-      countSleeps: <?= json_encode($object["count_sleeps"]) ?>,
-      furniture: <?= json_encode(array(OBJECT_FURNITURE, $object["furniture"])) ?>,
-      multimedia: <?= json_encode(array(OBJECT_MULTIMEDIA, $object["multimedia"])) ?>,
-      comfort: <?= json_encode(array(OBJECT_COMFORT, $object["comfort"])) ?>,
-      additionally: <?= json_encode(array(OBJECT_ADDITIONALLY, $object["additionally"])) ?>,
-      wc: <?= json_encode(array(to_select(OBJECT_WC), $object["wc"])) ?>,
-      heating: <?= json_encode(array(to_select(OBJECT_HEATING), $object["heating"])) ?>,
-      hotWater: <?= json_encode(array(to_select(OBJECT_HOT_WATER), $object["hot_water"])) ?>,
-      window: <?= json_encode(array(to_select(OBJECT_WINDOW), $object["window"])) ?>,
-      state: <?= json_encode(array(to_select(OBJECT_STATE), $object["state"])) ?>,
-      countBalcony: <?= json_encode($object["count_balcony"]) ?>,
-      typeBalcony: <?= json_encode(array(to_select(OBJECT_TYPE_BALCONY), $object["type_balcony"])) ?>,
-      description: <?= json_encode(text($object["description"])) ?>,
-      serviceMark: <?= json_encode(text($object["service_mark"])) ?>,
-      datePrice: <?= json_encode($object["date_price"]) ?>,
-      dateRent: <?= json_encode($object["date_rent"]) ?>,
-      price: <?= json_encode($object["price"]) ?>,
-      guaranty: <?= json_encode($object["guaranty"]) ?>,
-      prepayment: <?= json_encode($object["prepayment"]) ?>,
-      priceAdditionally: <?= json_encode(array(OBJECT_PRICE_ADDITIONALLY, $object["price_additionally"])) ?>,
-      forWhom: <?= json_encode(array(OBJECT_FOR_WHOM, $object["for_whom"])) ?>
+      source: <?= json_encode(to_select(OBJECT_SOURCE)) ?>,
+      exclusive: <?= json_encode(OBJECT_EXCLUSIVE) ?>,
+      quickly: <?= json_encode(OBJECT_QUICKLY) ?>,
+      region: <?= json_encode(to_select(get_regions(), true)) ?>,
+      countRooms: <?= json_encode(to_select(OBJECT_COUNT_ROOMS)) ?>,
+      relatedRooms: <?= json_encode(OBJECT_RELATIVE_ROOMS) ?>,
+      typeOfRoom: <?= json_encode(ROOM_TYPE_OF_ROOM) ?>,
+      furniture: <?= json_encode(OBJECT_FURNITURE) ?>,
+      multimedia: <?= json_encode(OBJECT_MULTIMEDIA) ?>,
+      comfort: <?= json_encode(OBJECT_COMFORT) ?>,
+      additionally: <?= json_encode(OBJECT_ADDITIONALLY) ?>,
+      wc: <?= json_encode(to_select(OBJECT_WC)) ?>,
+      heating: <?= json_encode(to_select(OBJECT_HEATING)) ?>,
+      hotWater: <?= json_encode(to_select(OBJECT_HOT_WATER)) ?>,
+      window: <?= json_encode(to_select(OBJECT_WINDOW)) ?>,
+      state: <?= json_encode(to_select(OBJECT_STATE)) ?>,
+      typeBalcony: <?= json_encode(to_select(OBJECT_TYPE_BALCONY)) ?>,
+      priceAdditionally: <?= json_encode(OBJECT_PRICE_ADDITIONALLY) ?>,
+      forWhom: <?= json_encode(OBJECT_FOR_WHOM) ?>
     };
   </script>
 </head>
@@ -88,13 +40,12 @@ $hash = md5(microtime());
   <?php require_once "header.php" ?>
 
   <div class="page_title">
-    <h1>Редактирование квартиры на аренду</h1>
+    <h1>Добавление комнаты на аренду</h1>
   </div>
 
 	<main class="content">
 
-    <form id="form_flat_edit" action="/act/flat.php?act=flat_edit" method="post">
-      <input type="hidden" name="id" value="<?= $object_id ?>" />
+    <form id="form_room_add" action="/act/room.php?act=room_add" method="post">
       <input type="hidden" name="hash" value="<?= $hash ?>" />
       <div class="popup_content">
         <table class="column">
@@ -148,7 +99,7 @@ $hash = md5(microtime());
             </td>
             <td class="right">
               <h2>Карта</h2>
-              <div id="flat_map" class="js_loading"></div>
+              <div id="object_map" class="js_loading"></div>
             </td>
           </tr>
         </table>
@@ -168,6 +119,10 @@ $hash = md5(microtime());
                   <td class="right">&nbsp;</td>
                 </tr>
               </table>
+              <div>
+                <label>Тип комнаты</label>
+                <input class="js_loading" name="type_of_room" type="text" />
+              </div>
               <table class="column">
                 <tr>
                   <td class="left">
@@ -331,12 +286,7 @@ $hash = md5(microtime());
             </td>
           </tr>
         </table>
-        <table>
-          <tr>
-            <td><button class="button" type="submit"><span class="button_caption">Сохранить</span></button></td>
-            <td><button class="button" type="button"><span class="button_caption">В архив</span></button></td>
-          </tr>
-        </table>
+        <button class="button" type="submit"><span class="button_caption">Создать</span></button>
       </div>
     </form>
 

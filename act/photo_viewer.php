@@ -9,15 +9,16 @@ $core->open();
 $response = __response::get_instance();
 
 $object_id = __data::post("object", "u");
-$object_hash = __data::post("hash", "s");
+$object_type = __data::post("type", "s");
 $photo_id = __data::post("id", "u");
+$hash = __data::post("hash", "s");
 
 $offset = 0;
 $photos = array();
 
-$q = "select `id`, `fullsize`, `fw`, `fh` from `images` where `id_object` = ? or `hash` = ?";
+$q = "select `id`, `fullsize`, `fw`, `fh` from `images` where (`id_object` = ? and `type_object` = ?) or `hash` = ?";
 $stmt = $db->prepare($q) or die($db->error);
-$stmt->bind_param("is", $object_id, $object_hash);
+$stmt->bind_param("iss", $object_id, $object_type, $hash);
 $stmt->execute() or die($db->error);
 $res = $stmt->get_result();
 $i = 0;

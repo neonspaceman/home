@@ -110,11 +110,12 @@ function load_images_by_id()
   $response = __response::get_instance();
 
   $id_object = __data::post("id", "u");
+  $type_object = __data::post("type", "s");
   $images = array();
 
-  $q = "select `id`, `thumb` from `images` where `id_object` = ?";
+  $q = "select `id`, `thumb` from `images` where `id_object` = ? and `type_object` = ?";
   $stmt = $db->prepare($q) or die($db->error);
-  $stmt->bind_param("i", $id_object);
+  $stmt->bind_param("is", $id_object, $type_object);
   $stmt->execute() or die($db->error);
   $res = $stmt->get_result();
   while($row = $res->fetch_assoc())

@@ -2,12 +2,12 @@
 
 require_once ROOT . "/resource/object_values.php";
 
-$object_type = "flat";
+$object_type = "room";
 $db = __database::get_instance();
 $user = __user::get_instance();
 
 // фильтры
-__filter::init("flats");
+__filter::init("rooms");
 __filter::add("id_region", "Region", get_regions());
 __filter::add("floor", "Counter");
 __filter::add("count_rooms", "Select", OBJECT_COUNT_ROOMS);
@@ -15,17 +15,17 @@ __filter::add("square_general", "Counter");
 __filter::add("price", "Counter");
 __filter::exec();
 
-__object::init("flats");
+__object::init("rooms");
 // кол-во объектов
-$count_flats = 0;
+$count_rooms = 0;
 $stmt = __object::get_count_stmt();
 $stmt->execute() or die($db->error);
-$stmt->bind_result($count_flats);
+$stmt->bind_result($count_rooms);
 $stmt->fetch();
 $stmt->close();
 
 $order_by = get_order(OBJECT_ORDERS);
-$offset = get_offset(RECORDS_ON_PAGE, $count_flats);
+$offset = get_offset(RECORDS_ON_PAGE, $count_rooms);
 
 ?>
 <!DOCTYPE html>
@@ -39,7 +39,7 @@ $offset = get_offset(RECORDS_ON_PAGE, $count_flats);
       orderBy: <?= json_encode($order_by) ?>,
       offset: <?= json_encode($offset) ?>,
       recordsOnPage: <?= json_encode(RECORDS_ON_PAGE) ?>,
-      countRecords: <?= json_encode($count_flats) ?>,
+      countRecords: <?= json_encode($count_rooms) ?>,
       region: {
         data: <?= json_encode(get_regions()) ?>,
         select: <?= json_encode(__filter::get_value_by_name("id_region")) ?>
@@ -71,9 +71,9 @@ $offset = get_offset(RECORDS_ON_PAGE, $count_flats);
   <?php require_once "header.php" ?>
 
   <div class="page_title">
-    <h1>Аренда квартир в Чите</h1>
+    <h1>Аренда комнат в Чите</h1>
     <div class="action">
-      <div class="count"><?= number_format($count_flats, 0, "", " ") ?>&nbsp;<?= get_num_ending($count_flats, array("квартира отсортирована", "квартиры отсортированы", "квартир отсортированы")) ?></div>
+      <div class="count"><?= number_format($count_rooms, 0, "", " ") ?>&nbsp;<?= get_num_ending($count_rooms, array("комната отсортирована", "комнаты отсортированы", "комнат отсортированы")) ?></div>
       <div id="order_by" class="order_by js_loading"></div>
       <div id="pagination" class="pagination js_loading"></div>
     </div>
@@ -148,12 +148,12 @@ $offset = get_offset(RECORDS_ON_PAGE, $count_flats);
       ?>
 
       <div class="object_item">
-        <a href="/flat?id=<?= $object["id"] ?>" class="cover" style="background-image: url(<?= $cover ?>);">
+        <a href="/room?id=<?= $object["id"] ?>" class="cover" style="background-image: url(<?= $cover ?>);">
           <div class="count"><i class="fa fa-camera" aria-hidden="true"></i><?= $count_images ?></div>
         </a>
         <div class="general">
-          <a href="/flat?id=<?= $object["id"] ?>" class="address">ул. <?= text($object["street_name"]) ?>, <?= text($object["house"]) ?></a>
-          <a href="/flat?id=<?= $object["id"] ?>" class="view_on_map"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;Посмотреть на карте</a>
+          <a href="/room?id=<?= $object["id"] ?>" class="address">ул. <?= text($object["street_name"]) ?>, <?= text($object["house"]) ?></a>
+          <a href="/room?id=<?= $object["id"] ?>" class="view_on_map"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;Посмотреть на карте</a>
           <div class="short">
             <?php if ($object["count_rooms"]): ?><span><?= $object["count_rooms"] ?></span><?php endif; ?>
             <?php if ($object["floor"]): ?><span><?= $object["floor"] ?>&nbsp;этаж</span><?php endif; ?>
@@ -215,7 +215,7 @@ $offset = get_offset(RECORDS_ON_PAGE, $count_flats);
             <?php if ($user->get("logged")): ?>
             <div class="phone"><?= $landlord["phone"] ?></div>
               <?php if ($count_phones > 1): ?>
-              <a href="/flat?id=<?= $object["id"] ?>" class="more">ещё&nbsp;<?= $count_phones - 1 ?>&nbsp;<?= get_num_ending($count_phones - 1, array("номер", "номера", "номеров")) ?>...</a>
+              <a href="/room?id=<?= $object["id"] ?>" class="more">ещё&nbsp;<?= $count_phones - 1 ?>&nbsp;<?= get_num_ending($count_phones - 1, array("номер", "номера", "номеров")) ?>...</a>
               <?php endif; ?>
             <?php else: ?>
             <a onclick="loginPopup.show();" class="more">показать номер</a>

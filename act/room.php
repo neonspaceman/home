@@ -5,7 +5,7 @@ require_once "../sys/__init.php";
 /**
  * Добавление квартир
  */
-function flat_add()
+function room_add()
 {
   $db = __database::get_instance();
   $response = __response::get_instance();
@@ -73,6 +73,9 @@ function flat_add()
 
   $count_rooms = __data::post("count_rooms", "u");
   $related_rooms = $count_rooms > 2 ? __data::post("related_room", "u") : 0;
+  $type_of_room = __data::post("type_of_room", "u");
+  if (!$type_of_room)
+    $response->error("type of room doesn't select");
   $square_general = __data::post("square_general", "f");
   $square_living = __data::post("square_living", "f");
   $square_kitchen = __data::post("square_kitchen", "f");
@@ -106,28 +109,30 @@ function flat_add()
 
   // добавление квартиры
   $id_object = 0;
-  $type_object = "flat";
+  $type_object = "room";
   if ($response->is_success())
   {
-    $q = "insert into `flats`
+    $q = "insert into `rooms`
             (`source`, `exclusive`, `quickly`, `id_region`, `id_street`, `house`, `flat`, `guide`, `lon`, `lat`, `count_rooms`, `related_rooms`, 
             `count_sleeps`, `floor`, `floors`, `square_general`, `square_living`, `square_kitchen`, `state`, `heating`, `hot_water`, 
             `wc`, `window`, `furniture`, `count_balcony`, `type_balcony`, `multimedia`, `comfort`, `additionally`, `date_rent`, `prepayment`, 
-            `for_whom`, `description`, `date_price`, `price`, `guaranty`, `price_additionally`, `service_mark`, `time_create`, `visibility`) 
-            values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            `for_whom`, `description`, `date_price`, `price`, `guaranty`, `price_additionally`, `service_mark`, `time_create`, `visibility`,
+            `type_of_room`) 
+            values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     $stmt = $db->prepare($q) or die($db->error);
     $stmt->bind_param(
-      "iiiiisssddiiiiidddiiiiiiiiiiiiiisiiiisii",
+      "iiiiisssddiiiiidddiiiiiiiiiiiiiisiiiisiii",
       $source, $exclusive, $quickly, $id_region, $id_street, $house, $flat, $guide, $lon, $lat, $count_rooms, $related_rooms,
       $count_sleeps, $floor, $floors, $square_general, $square_living, $square_kitchen, $state, $heating, $hot_water,
       $wc, $window, $furniture, $count_balcony, $type_balcony, $multimedia, $comfort, $additionally, $date_rent, $prepayment,
-      $for_whom, $description, $date_price, $price, $guaranty, $price_additionally, $service_mark, $time_create, $visibility
+      $for_whom, $description, $date_price, $price, $guaranty, $price_additionally, $service_mark, $time_create, $visibility,
+      $type_of_room
     );
     $stmt->execute() or die($db->error);
     $id_object = $stmt->insert_id;
     $stmt->close();
     if (!$id_object)
-      $response->error("flat doesn't create");
+      $response->error("room doesn't create");
   }
 
   // связывание клиентов с объектом
@@ -179,17 +184,17 @@ function flat_add()
 /**
  * Добавление квартир
  */
-function flat_edit()
+function room_edit()
 {
   $db = __database::get_instance();
   $response = __response::get_instance();
 
   $id_object = __data::post("id", "u");
-  $type_object = "flat";
+  $type_object = "room";
   $hash = __data::post("hash", "s");
 
   $object_exists = 0;
-  $q = "select count(*) `count` from `flats` where `id` = ? limit 1";
+  $q = "select count(*) `count` from `rooms` where `id` = ? limit 1";
   $stmt = $db->prepare($q) or die($db->error);
   $stmt->bind_param("i", $id_object);
   $stmt->execute() or die($db->error);
@@ -198,14 +203,14 @@ function flat_edit()
   $stmt->close();
   if (!$object_exists)
   {
-    $response->error("flat doesn't exist");
+    $response->error("room doesn't exist");
     return;
   }
 
   $db->autocommit(false);
 
   // развязываем изображения и арендодателя
-  $q = "update `images` set `id_object` = null, `hash` = ? where `id_object` = ?";
+  $q = "update `images` set `id_object` = null, `type_object` = '', `hash` = ? where `id_object` = ?";
   $stmt = $db->prepare($q) or die($db->error);
   $stmt->bind_param("si", $hash, $id_object);
   $stmt->execute() or die($db->error);
@@ -273,6 +278,9 @@ function flat_edit()
 
   $count_rooms = __data::post("count_rooms", "u");
   $related_rooms = $count_rooms > 2 ? __data::post("related_room", "u") : 0;
+  $type_of_room = __data::post("type_of_room", "u");
+  if (!$type_of_room)
+    $response->error("type of room doesn't select");
   $square_general = __data::post("square_general", "f");
   $square_living = __data::post("square_living", "f");
   $square_kitchen = __data::post("square_kitchen", "f");
@@ -303,11 +311,11 @@ function flat_edit()
   $for_whom = __data::post("for_whom", "mask");
 
   // сохранение изменений
-  $type_object = "flat";
+  $type_object = "room";
   if ($response->is_success())
   {
     $q = "update 
-            `flats` 
+            `rooms` 
           set
             `source` = ?, `exclusive` = ?, `quickly` = ?, `id_region` = ?, `id_street` = ?, `house` = ?, `flat` = ?, 
             `guide` = ?, `lon` = ?, `lat` = ?, `count_rooms` = ?, `related_rooms` = ?, `count_sleeps` = ?, 
@@ -315,7 +323,7 @@ function flat_edit()
             `heating` = ?, `hot_water` = ?, `wc` = ?, `window` = ?, `furniture` = ?, `count_balcony` = ?, 
             `type_balcony` = ?, `multimedia` = ?, `comfort` = ?, `additionally` = ?, `date_rent` = ?, `prepayment` = ?, 
             `for_whom` = ?, `description` = ?, `date_price` = ?, `price` = ?, `guaranty` = ?, `price_additionally` = ?, 
-            `service_mark` = ? 
+            `service_mark` = ?, `type_of_room` = ? 
           where
             `id` = ?
           limit 1";
@@ -325,7 +333,7 @@ function flat_edit()
       $source, $exclusive, $quickly, $id_region, $id_street, $house, $flat, $guide, $lon, $lat, $count_rooms, $related_rooms,
       $count_sleeps, $floor, $floors, $square_general, $square_living, $square_kitchen, $state, $heating, $hot_water,
       $wc, $window, $furniture, $count_balcony, $type_balcony, $multimedia, $comfort, $additionally, $date_rent, $prepayment,
-      $for_whom, $description, $date_price, $price, $guaranty, $price_additionally, $service_mark, $id_object
+      $for_whom, $description, $date_price, $price, $guaranty, $price_additionally, $service_mark, $type_of_room, $id_object
     );
     $stmt->execute() or die($db->error);
     $stmt->close();
@@ -377,14 +385,14 @@ function flat_edit()
   }
 }
 
-function flat_toggle_archive()
+function room_toggle_archive()
 {
   $db = __database::get_instance();
   $response = __response::get_instance();
 
   $object_id = __data::post("id", "u");
 
-  $q = "select `visibility` from `flats` where `id` = ? limit 1";
+  $q = "select `visibility` from `rooms` where `id` = ? limit 1";
   $stmt = $db->prepare($q) or die($db->error);
   $stmt->bind_param("i", $object_id);
   $stmt->execute() or die($db->error);
@@ -395,18 +403,18 @@ function flat_toggle_archive()
 
   if (!$row)
   {
-    $response->error("flat doesn't find");
+    $response->error("room doesn't find");
     return;
   }
 
   $visibility = !$row["visibility"];
-  $q = "update `flats` set `visibility` = ? where `id` = ? limit 1";
+  $q = "update `rooms` set `visibility` = ? where `id` = ? limit 1";
   $stmt = $db->prepare($q) or die($db->error);
   $stmt->bind_param("ii", $visibility, $object_id);
   $stmt->execute() or die($db->error);
   if ($stmt->affected_rows < 1)
   {
-    $response->error("flat's visibility doesn't change");
+    $response->error("room's visibility doesn't change");
     return;
   }
 
@@ -420,14 +428,14 @@ $response = __response::get_instance();
 
 switch(__data::get("act"))
 {
-case "flat_add":
-  flat_add();
+case "room_add":
+  room_add();
   break;
-case "flat_edit":
-  flat_edit();
+case "room_edit":
+  room_edit();
   break;
-case "flat_toggle_archive":
-  flat_toggle_archive();
+case "room_toggle_archive":
+  room_toggle_archive();
   break;
 }
 

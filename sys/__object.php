@@ -4,8 +4,14 @@
  * Функции для вывод объектов по фильтрам
  * Class __flat
  */
-class __flats
+class __object
 {
+  /**
+   * Таблица с которой работаем
+   * @var
+   */
+  private static $database;
+
   /**
    * Создание условий по фильтрам
    * @param $q
@@ -66,7 +72,7 @@ class __flats
    */
   public static function get_count_stmt()
   {
-    $q = "select count(*) `count` from `flats` left join `regions` on `regions`.`id` = `flats`.`id_region`";
+    $q = "select count(*) `count` from " . self::$database . " left join `regions` on `regions`.`id` = " . self::$database . ".`id_region`";
     self::create_where_statement($q, $mask, $params);
     return self::execute_statement($q, $mask, $params);
   }
@@ -78,13 +84,14 @@ class __flats
   public static function get_stmt($order_by, $offset)
   {
     $q = "select
-              `flats`.`id`, `streets`.`name` `street_name`, `flats`.`house`, `flats`.`price`,
-              `flats`.`lat`, `flats`.`lon`, `flats`.`count_rooms`, `flats`.`floor`, `flats`.`square_general`,
-              `flats`.`furniture`, `flats`.`multimedia`, `flats`.`comfort`, `flats`.time_create
+              " . self::$database . ".`id`, `streets`.`name` `street_name`, " . self::$database . ".`house`, " . self::$database . ".`price`,
+              " . self::$database . ".`lat`, " . self::$database . ".`lon`, " . self::$database . ".`count_rooms`, " . self::$database . ".`floor`, 
+              " . self::$database . ".`square_general`, " . self::$database . ".`furniture`, " . self::$database . ".`multimedia`, 
+              " . self::$database . ".`comfort`, " . self::$database . ".time_create
             from
-              `flats`
-              left join `streets` on `streets`.`id` = `flats`.`id_street`
-              left join `regions` on `regions`.`id` = `flats`.`id_region`";
+              " . self::$database . "
+              left join `streets` on `streets`.`id` = " . self::$database . ".`id_street`
+              left join `regions` on `regions`.`id` = " . self::$database . ".`id_region`";
 
     self::create_where_statement($q, $mask, $params);
 
@@ -104,5 +111,10 @@ class __flats
     $params[] = RECORDS_ON_PAGE;
 
     return self::execute_statement($q, $mask, $params);
+  }
+
+  public static function init($database)
+  {
+    self::$database = "`" . $database . "`";
   }
 }

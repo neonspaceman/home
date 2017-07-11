@@ -43,12 +43,12 @@ var Landlord = function ($target){
 
   $target.replaceWith(this.$wrap);
 };
-Landlord.prototype.load = function (objectId){
+Landlord.prototype.load = function (objectId, objectType){
   this.$wrap.addClass("loading");
   $.ajax({
     url: "/act/landlord.php?act=get_by_id",
     type: "post",
-    data: { id: objectId },
+    data: { id: objectId, type: objectType },
     dataType: "json",
     success: function (data){
       data.landlord.forEach(function(item){
@@ -506,13 +506,13 @@ var Uploader = function ($target, options){
 /**
  * Загрузка ране загруженных фотографий
  */
-Uploader.prototype.load = function (objectId){
+Uploader.prototype.load = function (objectId, objectType){
   var $uploaded = this.$wrap.find(".uploaded");
   $uploaded.addClass("loading");
   $.ajax({
     type: "post",
     url: "/act/uploader.php?act=load_images_by_id",
-    data: { id: objectId },
+    data: { id: objectId, type: objectType },
     dataType: "json",
     success: function(data){
       data.images.forEach(function(item){ this.addThumb(item); }.bind(this));
@@ -679,7 +679,7 @@ Uploader.prototype.addThumb = function (info){
   "</div>");
   var tooltip = new Tooltip($img.find("a"), { message: "Открепить", width: "80" });
   $img.on("click", function (){
-    PhotoViewer.show({ photo: info.id, object: params.id, hash: params.hash });
+    PhotoViewer.show({ photo: info.id, object: params.objectId, type: params.objectType, hash: params.hash });
   });
   $img.find("a").on("click", function(event){
     $(this).closest(".cover").remove();

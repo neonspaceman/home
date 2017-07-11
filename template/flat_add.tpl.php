@@ -1,5 +1,5 @@
 <?php
-require_once ROOT . "/resource/flat_values.php";
+require_once ROOT . "/resource/object_values.php";
 $hash = md5(microtime());
 ?>
 <!DOCTYPE html>
@@ -10,24 +10,24 @@ $hash = md5(microtime());
   <script>
     var params = {
       hash: <?= json_encode($hash) ?>,
-      source: <?= json_encode(to_select(FLAT_SOURCE)) ?>,
-      exclusive: <?= json_encode(FLAT_EXCLUSIVE) ?>,
-      quickly: <?= json_encode(FLAT_QUICKLY) ?>,
+      source: <?= json_encode(to_select(OBJECT_SOURCE)) ?>,
+      exclusive: <?= json_encode(OBJECT_EXCLUSIVE) ?>,
+      quickly: <?= json_encode(OBJECT_QUICKLY) ?>,
       region: <?= json_encode(to_select(get_regions(), true)) ?>,
-      countRooms: <?= json_encode(to_select(FLAT_COUNT_ROOMS)) ?>,
-      relatedRooms: <?= json_encode(FLAT_RELATIVE_ROOMS) ?>,
-      furniture: <?= json_encode(FLAT_FURNITURE) ?>,
-      multimedia: <?= json_encode(FLAT_MULTIMEDIA) ?>,
-      comfort: <?= json_encode(FLAT_COMFORT) ?>,
-      additionally: <?= json_encode(FLAT_ADDITIONALLY) ?>,
-      wc: <?= json_encode(to_select(FLAT_WC)) ?>,
-      heating: <?= json_encode(to_select(FLAT_HEATING)) ?>,
-      hotWater: <?= json_encode(to_select(FLAT_HOT_WATER)) ?>,
-      window: <?= json_encode(to_select(FLAT_WINDOW)) ?>,
-      state: <?= json_encode(to_select(FLAT_STATE)) ?>,
-      typeBalcony: <?= json_encode(to_select(FLAT_TYPE_BALCONY)) ?>,
-      priceAdditionally: <?= json_encode(FLAT_PRICE_ADDITIONALLY) ?>,
-      forWhom: <?= json_encode(FLAT_FOR_WHOM) ?>
+      countRooms: <?= json_encode(to_select(OBJECT_COUNT_ROOMS)) ?>,
+      relatedRooms: <?= json_encode(OBJECT_RELATIVE_ROOMS) ?>,
+      furniture: <?= json_encode(OBJECT_FURNITURE) ?>,
+      multimedia: <?= json_encode(OBJECT_MULTIMEDIA) ?>,
+      comfort: <?= json_encode(OBJECT_COMFORT) ?>,
+      additionally: <?= json_encode(OBJECT_ADDITIONALLY) ?>,
+      wc: <?= json_encode(to_select(OBJECT_WC)) ?>,
+      heating: <?= json_encode(to_select(OBJECT_HEATING)) ?>,
+      hotWater: <?= json_encode(to_select(OBJECT_HOT_WATER)) ?>,
+      window: <?= json_encode(to_select(OBJECT_WINDOW)) ?>,
+      state: <?= json_encode(to_select(OBJECT_STATE)) ?>,
+      typeBalcony: <?= json_encode(to_select(OBJECT_TYPE_BALCONY)) ?>,
+      priceAdditionally: <?= json_encode(OBJECT_PRICE_ADDITIONALLY) ?>,
+      forWhom: <?= json_encode(OBJECT_FOR_WHOM) ?>
     };
   </script>
 </head>
@@ -98,7 +98,7 @@ $hash = md5(microtime());
             </td>
             <td class="right">
               <h2>Карта</h2>
-              <div id="flat_map" class="js_loading"></div>
+              <div id="object_map" class="js_loading"></div>
             </td>
           </tr>
         </table>

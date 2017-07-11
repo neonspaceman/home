@@ -6,6 +6,8 @@
  */
 class __filter
 {
+  private static $database;
+
   /**
    * Пришедшие фильтры
    * @var array
@@ -23,6 +25,11 @@ class __filter
    * @var array
    */
   private static $limits = array();
+
+  public static function init($database)
+  {
+    self::$database = "`" . $database . "`";
+  }
 
   /**
    * Добавление нового фильтра
@@ -46,7 +53,8 @@ class __filter
         max(`floor`) `max_floor`, min(`floor`) `min_floor`, 
         max(`price`) `max_price`, min(`price`) `min_price`,
         max(`square_general`) `max_square_general`, min(`square_general`) `min_square_general`
-      from `flats`";
+      from " .
+        self::$database;
     $res = $db->query($q) or die($db->error);
     $row = $res->fetch_assoc();
     foreach($row as $key => $value)
