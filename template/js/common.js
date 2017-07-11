@@ -2016,6 +2016,17 @@ function preLoadImg(images){
   });
 }
 
+var User = {};
+User.init = function(){
+  if (user.logged)
+    new Menu($("#user_action"), [ ["/act/user.php?act=logout", "Выйти"] ]);
+  else
+    this.loginPopup = new Popup({ class: "message_box", "url": "/users/login" });
+};
+User.openLoginPopup = function(){
+  this.loginPopup.show();
+};
+
 $(function (){
   // проверка наличия аттрибута
   $.fn.hasAttr = function (name){
@@ -2024,12 +2035,5 @@ $(function (){
   Location.init();
   PopupCollection.init();
   PhotoViewer.init();
-  if (user.logged){
-    new Menu($("#user_action"), [ ["/act/user.php?act=logout", "Выйти"] ]);
-  } else {
-    var loginPopup = new Popup({ class: "message_box", "url": "/users/login" });
-    $("#user_action").on("click", function(){
-      loginPopup.show();
-    });
-  }
+  User.init();
 });

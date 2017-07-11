@@ -16,8 +16,6 @@ $page->render_meta();
 <?php $page->render_styles() ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="/template/js/jquery.form.min.js"></script>
-<script>
-  var user = { logged: <?= json_encode($user->get("logged")); ?> };
-</script>
+<script>var user = { logged: <?= json_encode($user->get("logged")); ?> };</script>
 <script src="/template/js/common.js?<?= time() ?>"></script>
 <?php $page->render_scripts() ?>

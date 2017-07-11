@@ -163,7 +163,10 @@ $(function(){
   });
   var filterCollection = new FilterCollection($("#filter"));
   filterCollection.add("Район", "id_region", "Select", params.region.data, params.region.select);
-  filterCollection.add("Этаж", "floor", "Counter", params.floor.data, params.floor.select);
+  if (params.floor)
+    filterCollection.add("Этаж", "floor", "Counter", params.floor.data, params.floor.select);
+  if (params.floors)
+    filterCollection.add("Этажность", "floors", "Counter", params.floors.data, params.floors.select);
   filterCollection.add("Кол-во комнат", "count_rooms", "Select", params.countRooms.data, params.countRooms.select);
   filterCollection.add("Площадь", "square_general", "Counter", params.squareGeneral.data, params.squareGeneral.select);
   filterCollection.add("Цена", "price", "Counter", params.price.data, params.price.select);

@@ -2,20 +2,20 @@
 
 require_once ROOT . "/resource/object_values.php";
 
-$object_type = "flat";
+$object_type = "home";
 $db = __database::get_instance();
 $user = __user::get_instance();
 
 // фильтры
-__filter::init("flats");
+__filter::init("homes");
 __filter::add("id_region", "Region", get_regions());
-__filter::add("floor", "Counter");
+__filter::add("floors", "Counter");
 __filter::add("count_rooms", "Select", OBJECT_COUNT_ROOMS);
 __filter::add("square_general", "Counter");
 __filter::add("price", "Counter");
 __filter::exec();
 
-__object::init("flats");
+__object::init("homes");
 // кол-во объектов
 $count_flats = 0;
 $stmt = __object::get_count_stmt();
@@ -44,9 +44,9 @@ $offset = get_offset(RECORDS_ON_PAGE, $count_flats);
         data: <?= json_encode(get_regions()) ?>,
         select: <?= json_encode(__filter::get_value_by_name("id_region")) ?>
       },
-      floor: {
-        data: <?= json_encode(array_merge(__filter::get_limit_by_name("floor"), array(1))) ?>,
-        select: <?= json_encode(__filter::get_value_by_name("floor")) ?>
+      floors: {
+        data: <?= json_encode(array_merge(__filter::get_limit_by_name("floors"), array(1))) ?>,
+        select: <?= json_encode(__filter::get_value_by_name("floors")) ?>
       },
       countRooms: {
         data: <?= json_encode(OBJECT_COUNT_ROOMS) ?>,
@@ -73,7 +73,7 @@ $offset = get_offset(RECORDS_ON_PAGE, $count_flats);
   <div class="page_title">
     <h1>Аренда квартир в Чите</h1>
     <div class="action">
-      <div class="count"><?= number_format($count_flats, 0, "", " ") ?>&nbsp;<?= get_num_ending($count_flats, array("квартира отсортирована", "квартиры отсортированы", "квартир отсортированы")) ?></div>
+      <div class="count"><?= number_format($count_flats, 0, "", " ") ?>&nbsp;<?= get_num_ending($count_flats, array("дом отсортирован", "дома отсортированы", "домов отсортированы")) ?></div>
       <div id="order_by" class="order_by js_loading"></div>
       <div id="pagination" class="pagination js_loading"></div>
     </div>
@@ -148,15 +148,15 @@ $offset = get_offset(RECORDS_ON_PAGE, $count_flats);
       ?>
 
       <div class="object_item">
-        <a href="/flat?id=<?= $object["id"] ?>" class="cover" style="background-image: url(<?= $cover ?>);">
+        <a href="/home?id=<?= $object["id"] ?>" class="cover" style="background-image: url(<?= $cover ?>);">
           <div class="count"><i class="fa fa-camera" aria-hidden="true"></i><?= $count_images ?></div>
         </a>
         <div class="general">
-          <a href="/flat?id=<?= $object["id"] ?>" class="address">ул. <?= text($object["street_name"]) ?>, <?= text($object["house"]) ?></a>
-          <a href="/flat?id=<?= $object["id"] ?>" class="view_on_map"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;Посмотреть на карте</a>
+          <a href="/home?id=<?= $object["id"] ?>" class="address">ул. <?= text($object["street_name"]) ?>, <?= text($object["house"]) ?></a>
+          <a href="/home?id=<?= $object["id"] ?>" class="view_on_map"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp;Посмотреть на карте</a>
           <div class="short">
             <?php if ($object["count_rooms"]): ?><span><?= $object["count_rooms"] ?></span><?php endif; ?>
-            <?php if ($object["floor"]): ?><span><?= $object["floor"] ?>&nbsp;этаж</span><?php endif; ?>
+            <?php if ($object["floors"]): ?><span><?= $object["floors"] . "&nbsp;" . get_num_ending($object["floors"], array("этаж", "этажа", "этажей")) ?></span><?php endif; ?>
             <?php if ($object["square_general"]): ?><span><?= $object["square_general"] ?>&nbsp;м<sup>2</sup></span><?php endif; ?>
           </div>
           <div class="price"><?= number_format($object["price"], 0, "", "&nbsp;") ?>&nbsp;<i class="fa fa-rub" aria-hidden="true"></i></div>
@@ -215,7 +215,7 @@ $offset = get_offset(RECORDS_ON_PAGE, $count_flats);
             <?php if ($user->get("logged")): ?>
             <div class="phone"><?= $landlord["phone"] ?></div>
               <?php if ($count_phones > 1): ?>
-              <a href="/flat?id=<?= $object["id"] ?>" class="more">ещё&nbsp;<?= $count_phones - 1 ?>&nbsp;<?= get_num_ending($count_phones - 1, array("номер", "номера", "номеров")) ?>...</a>
+              <a href="/home?id=<?= $object["id"] ?>" class="more">ещё&nbsp;<?= $count_phones - 1 ?>&nbsp;<?= get_num_ending($count_phones - 1, array("номер", "номера", "номеров")) ?>...</a>
               <?php endif; ?>
             <?php else: ?>
             <a onclick="User.openLoginPopup()" class="more">показать номер</a>

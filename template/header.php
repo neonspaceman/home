@@ -10,7 +10,7 @@
       <?php if ($user->get("logged")): ?>
       <li><a id="user_action"><i class="fa fa-user" aria-hidden="true"></i><?= text($user->get("name")) ?><i class="fa fa-caret-down right" aria-hidden="true"></i></a></li>
       <?php else: ?>
-      <li><a id="user_action"><i class="fa fa-user" aria-hidden="true"></i>Войти</a></li>
+      <li><a id="user_action" onclick="User.openLoginPopup()"><i class="fa fa-user" aria-hidden="true"></i>Войти</a></li>
       <?php endif; ?>
     </ul>
   </div>

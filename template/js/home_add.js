@@ -31,7 +31,6 @@ Form.init = function(){
     }
   });
   var relatedRooms = new Checkbox($("input[name='related_rooms']"), params.relatedRooms, { disabled: true });
-  new RadioGroup($("input[name='type_of_room']"), params.typeOfRoom, { selected: 0 });
   new Counter($("input[name='square_general']"), { minValue: 0, isFloat: true });
   new Counter($("input[name='square_living']"), { minValue: 0, isFloat: true });
   new Counter($("input[name='square_kitchen']"), { minValue: 0, isFloat: true });
@@ -68,7 +67,7 @@ Form.init = function(){
   this.map = new Map($("#object_map"));
   this.uploader = new Uploader($("#uploader"));
   this.findPhotos = new FindPhotos(this.uploader);
-  $("#form_room_add").ajaxForm({
+  $("#form_home_add").ajaxForm({
     dataType: "json",
     beforeSubmit: function(arr, $form, options){
       var error = "";
@@ -89,7 +88,7 @@ Form.init = function(){
     }.bind(this),
     success: function(data, status, xhr, $form){
       if (data.status === "success") {
-        location.href = "/room?id=" + data.id;
+        location.href = "/home?id=" + data.id;
       } else {
         var wrap_message = "";
         data.message.every(function(message){

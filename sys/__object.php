@@ -85,7 +85,8 @@ class __object
   {
     $q = "select
               " . self::$database . ".`id`, `streets`.`name` `street_name`, " . self::$database . ".`house`, " . self::$database . ".`price`,
-              " . self::$database . ".`lat`, " . self::$database . ".`lon`, " . self::$database . ".`count_rooms`, " . self::$database . ".`floor`, 
+              " . self::$database . ".`lat`, " . self::$database . ".`lon`, " . self::$database . ".`count_rooms`, 
+              " . (self::$database != "`homes`" ? self::$database . ".`floor`" : self::$database . ".`floors`") . ",
               " . self::$database . ".`square_general`, " . self::$database . ".`furniture`, " . self::$database . ".`multimedia`, 
               " . self::$database . ".`comfort`, " . self::$database . ".time_create
             from
@@ -113,6 +114,10 @@ class __object
     return self::execute_statement($q, $mask, $params);
   }
 
+  /**
+   * Иницализация
+   * @param $database - база данных
+   */
   public static function init($database)
   {
     self::$database = "`" . $database . "`";

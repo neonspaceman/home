@@ -88,7 +88,7 @@ Form.init = function(){
     }.bind(this),
     success: function(data, status, xhr, $form){
       if (data.status === "success") {
-        location.href = "/flat/view?id=" + data.id;
+        location.href = "/flat?id=" + data.id;
       } else {
         var wrap_message = "";
         data.message.every(function(message){

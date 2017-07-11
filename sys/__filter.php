@@ -49,12 +49,17 @@ class __filter
   {
     $db = __database::get_instance();
 
-    $q = "select 
-        max(`floor`) `max_floor`, min(`floor`) `min_floor`, 
-        max(`price`) `max_price`, min(`price`) `min_price`,
-        max(`square_general`) `max_square_general`, min(`square_general`) `min_square_general`
-      from " .
-        self::$database;
+    // подсчёт макимальных и минимальных значений
+    $q = "";
+    foreach(self::$filters as $name => $filter)
+    {
+      if ($filter["type"] !== "Counter")
+        continue;
+      if ($q)
+        $q .= ",";
+      $q .= "max(`" . $name . "`) `max_" . $name . "`, min(`" . $name . "`) `min_" . $name . "`";
+    }
+    $q = "select " . $q . " from " . self::$database;
     $res = $db->query($q) or die($db->error);
     $row = $res->fetch_assoc();
     foreach($row as $key => $value)

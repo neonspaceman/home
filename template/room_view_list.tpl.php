@@ -218,7 +218,7 @@ $offset = get_offset(RECORDS_ON_PAGE, $count_rooms);
               <a href="/room?id=<?= $object["id"] ?>" class="more">ещё&nbsp;<?= $count_phones - 1 ?>&nbsp;<?= get_num_ending($count_phones - 1, array("номер", "номера", "номеров")) ?>...</a>
               <?php endif; ?>
             <?php else: ?>
-            <a onclick="loginPopup.show();" class="more">показать номер</a>
+            <a onclick="User.openLoginPopup()" class="more">показать номер</a>
             <?php endif; ?>
           </div>
         </div>
