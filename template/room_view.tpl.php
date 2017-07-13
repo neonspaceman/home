@@ -9,8 +9,8 @@ $object_id = __data::get("id", "u");
 $object_type = "room";
 $q = "select
         `rooms`.`id`, `source`, `exclusive`, `quickly`, `id_region`, `id_street`, `house`, `flat`, `guide`, `lon`, `lat`,
-        `count_rooms`, `related_rooms`, `count_sleeps`, `floor`, `floors`, `square_general`, `square_living`, `square_kitchen`,
-        `state`, `heating`, `hot_water`, `wc`, `window`, `furniture`, `count_balcony`, `type_balcony`,
+        `count_rooms`, `related_rooms`, `type_of_room`, `count_sleeps`, `floor`, `floors`, `square_general`, `square_living`, 
+        `square_kitchen`, `state`, `heating`, `hot_water`, `wc`, `window`, `furniture`, `count_balcony`, `type_balcony`,
         `multimedia`, `comfort`, `additionally`, `date_rent`, `prepayment`, `for_whom`, `description`,
         `date_price`, `price`, `guaranty`, `price_additionally`, `service_mark`, `time_create`, `visibility`,
         `streets`.`name` `name_street`, `regions`.`name` `name_region`, `regions`.`parent` `id_parent_region`
@@ -33,6 +33,7 @@ $object["source"] = __ui::get_value(OBJECT_SOURCE, $object["source"]);
 
 $object["floor"] = $object["floor"] ? $object["floor"] . ($object["floors"] ? " из " . $object["floors"] : "") : false;
 $object["count_rooms"] = __ui::get_value(OBJECT_COUNT_ROOMS, $object["count_rooms"]);
+$object["type_of_room"] = __ui::get_value(ROOM_TYPE_OF_ROOM, $object["type_of_room"]);
 $object["count_sleeps"] = $object["count_sleeps"]
   ? ($object["count_sleeps"] . " " . get_num_ending($object["count_sleeps"], array("спальное место", "спальных места", "спальных мест")))
   : false;
@@ -84,7 +85,7 @@ $object["price_additionally"] = __ui::get_values_by_mask(OBJECT_PRICE_ADDITIONAL
   <?php require_once "header.php" ?>
 
   <div class="page_title">
-    <h1>Просмотр квартиры</h1>
+    <h1>Просмотр комнаты</h1>
   </div>
 
 	<main class="content">
@@ -107,7 +108,7 @@ $object["price_additionally"] = __ui::get_values_by_mask(OBJECT_PRICE_ADDITIONAL
         </div>
         <?php
         endif;
-        if ($object["floor"] || $object["count_rooms"] || $object["count_sleeps"] ||
+        if ($object["floor"] || $object["count_rooms"] || $object["type_of_room"] || $object["count_sleeps"] ||
             $object["square_general"] || $object["square_kitchen"] || $object["square_living"] ||
             $object["wc"] || $object["heating"] || $object["hot_water"] || $object["window"] ||
             $object["state"] || $object["balcony"]):
@@ -124,6 +125,12 @@ $object["price_additionally"] = __ui::get_values_by_mask(OBJECT_PRICE_ADDITIONAL
             <span class="option_label">Кол-во комнат:</span>
             <span class="option_value"><?= $object["count_rooms"] ?></span>
           </li>
+          <?php endif; ?>
+          <?php if ($object["type_of_room"]): ?>
+            <li class="option">
+              <span class="option_label">Проживание:</span>
+              <span class="option_value"><?= $object["type_of_room"] ?></span>
+            </li>
           <?php endif; ?>
           <?php if ($object["count_sleeps"]): ?>
           <li class="option">

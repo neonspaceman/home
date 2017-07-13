@@ -39,7 +39,7 @@ $hash = md5(microtime());
   <?php require_once "header.php" ?>
 
   <div class="page_title">
-    <h1>Добавление квартиры на аренду</h1>
+    <h1>Добавление дома на аренду</h1>
   </div>
 
 	<main class="content">

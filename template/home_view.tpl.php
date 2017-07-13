@@ -84,7 +84,7 @@ $object["price_additionally"] = __ui::get_values_by_mask(OBJECT_PRICE_ADDITIONAL
   <?php require_once "header.php" ?>
 
   <div class="page_title">
-    <h1>Просмотр квартиры</h1>
+    <h1>Просмотр дома</h1>
   </div>
 
 	<main class="content">

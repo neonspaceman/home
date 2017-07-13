@@ -26,7 +26,7 @@ class home extends __page
     $stmt->fetch();
     $stmt->close();
 
-    $this->set_title("Просмотр комнаты на аренду");
+    $this->set_title("Просмотр дома на аренду");
     if ($object_exists)
     {
       $this->insert_script("//api-maps.yandex.ru/2.1/?lang=ru_RU");
@@ -42,7 +42,7 @@ class home extends __page
 
   public function view_list()
   {
-    $this->set_title("Аренда комнат в Чите");
+    $this->set_title("Аренда домов в Чите");
     $this->insert_style("/template/ion.rangeSlider-2.1.7/css/ion.rangeSlider.css", time());
     $this->insert_script("/template/ion.rangeSlider-2.1.7/js/ion.rangeSlider.min.js");
     $this->insert_style("/template/css/ui.css", time());

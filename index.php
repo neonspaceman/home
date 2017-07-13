@@ -9,6 +9,7 @@ $user = __user::get_instance();
 $user->exec();
 
 $route = __route::get_instance();
+$route->insert_rule(array("regexp" => "", "page" => "pages", "method" => "__index"));
 $route->insert_rule(array("regexp" => "flats", "page" => "flat", "method" => "view_list"));
 $route->insert_rule(array("regexp" => "flat", "page" => "flat", "method" => "view"));
 $route->insert_rule(array("regexp" => "rooms", "page" => "room", "method" => "view_list"));

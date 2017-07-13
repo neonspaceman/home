@@ -71,7 +71,7 @@ $offset = get_offset(RECORDS_ON_PAGE, $count_flats);
   <?php require_once "header.php" ?>
 
   <div class="page_title">
-    <h1>Аренда квартир в Чите</h1>
+    <h1>Аренда домов в Чите</h1>
     <div class="action">
       <div class="count"><?= number_format($count_flats, 0, "", " ") ?>&nbsp;<?= get_num_ending($count_flats, array("дом отсортирован", "дома отсортированы", "домов отсортированы")) ?></div>
       <div id="order_by" class="order_by js_loading"></div>
