@@ -21,9 +21,9 @@ if ($_SERVER['REMOTE_ADDR'] == "127.0.0.1")
 else
 {
   define("DB_HOST", "localhost");
-  define("DB_USER", "ct41445_dom");
+  define("DB_USER", "ct41445_home");
   define("DB_PASSWORD", "anito");
-  define("DB_BASE", "ct41445_dom");
+  define("DB_BASE", "ct41445_home");
 }
 
 define("RECORDS_ON_PAGE", 50);

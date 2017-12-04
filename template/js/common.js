@@ -685,7 +685,7 @@ Checkbox.prototype.setDisabled = function (value){
 var CheckboxGroup = function ($target, data, options){
   this.data = data;
   this.opts = $.extend({
-    selected: false, /* array of indexes */
+    selectedItems: false, /* array of indexes */
     disabled: false
   }, options);
   this.$wrap = $("<div class='checkbox_group'></div>");
@@ -698,7 +698,7 @@ var CheckboxGroup = function ($target, data, options){
   }.bind(this));
   $target.replaceWith(this.$wrap);
 
-  if (this.opts.selected !== false)
+  if (this.opts.selectedItems !== false)
     this.setChecked(this.opts.selectedItems, true);
 };
 /**

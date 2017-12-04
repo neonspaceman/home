@@ -8,9 +8,7 @@
         </div>
       </td>
       <td class="right">
-        <div class="powerby">
-          <a href="https://vk.me/neonspaceman" target="_blank">Powered by Dmitry Mitskus</a>
-        </div>
+        <div class="powerby"></div>
       </td>
     </tr>
   </table>

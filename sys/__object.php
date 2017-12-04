@@ -30,9 +30,9 @@ class __object
       switch(__filter::get_type_by_name($name))
       {
       case "Region":
-        $statement .= "`regions`.`parent` in (" . implode(array_fill(0, count($data[0]), "?"), ",") . ")";
-        $mask .= str_repeat("i", count($data[0]));
-        $params = array_merge($params, $data[0]);
+        $statement .= "(`regions`.`parent` in (" . implode(array_fill(0, count($data[0]), "?"), ",") . ") or `regions`.`id` in (" . implode(array_fill(0, count($data[0]), "?"), ",") . "))";
+        $mask .= str_repeat("i", count($data[0]) * 2);
+        $params = array_merge($params, $data[0], $data[0]);
         break;
       case "Select":
         $statement .= "`" . $name . "` in (" . implode(array_fill(0, count($data[0]), "?"), ",") . ")";

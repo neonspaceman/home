@@ -301,7 +301,7 @@ $object["price_additionally"] = __ui::get_values_by_mask(OBJECT_PRICE_ADDITIONAL
             }
             else
             {
-              $str_phones = "<a onclick='loginPopup.show();'>Показать номер</a>";
+              $str_phones = "<a onclick='User.openLoginPopup()'>Показать номер</a>";
             }
             echo $str_phones;
             ?>
@@ -384,7 +384,7 @@ $object["price_additionally"] = __ui::get_values_by_mask(OBJECT_PRICE_ADDITIONAL
           <div id="map" class="option map"><div class="map_loading"><span>Загрузка</span></div></div>
         </div>
         <?php
-        $q = "select `id`, `thumb` from `images` where `id_object` = ?";
+        $q = "select `id`, `thumb` from `images` where `id_object` = ? and `type_object` = 'home'";
         $stmt = $db->prepare($q) or die($db->error);
         $stmt->bind_param("i", $object_id);
         $stmt->execute();
